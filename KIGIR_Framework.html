@@ -146,10 +146,22 @@
   .modal-section p { font-size: 13px; color: #444; line-height: 1.6; }
 
   footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font-size: 11.5px; color: #999; text-align: center; line-height: 1.6; }
+
+  /* SITE NAV */
+  .sitenav { display: flex; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+  .sitenav a { font-size: 12.5px; font-weight: 600; padding: 7px 14px; border: 1.5px solid #ccc; border-radius: 20px; text-decoration: none; color: #555; background: #fff; transition: all 0.15s; }
+  .sitenav a:hover { border-color: #1F4E79; color: #1F4E79; }
+  .sitenav a.active { background: #1F4E79; color: #fff; border-color: #1F4E79; cursor: default; pointer-events: none; }
 </style>
 </head>
 <body>
 <div class="container">
+
+  <div class="sitenav">
+    <a href="index.html">Übersicht</a>
+    <a href="KIGIR_Framework.html" class="active">KIGIR-Framework</a>
+    <a href="KIGIR_Cockpit_Demo.html">KIGIR-Cockpit</a>
+  </div>
 
   <div class="title-row">
     <div>
@@ -381,7 +393,7 @@
           </ul>
         </div>
       </div>
-      <div class="info-box">💡 Alert-Konfiguration (Push/Pull individuell je Investor einstellbar) und Audit-Trail/Zugriffsprotokoll fürs Investor-Portal – beide Bestandteil des Compliance-Layers oben.</div>
+      <div class="info-box">💡 Aus dem Pitchly-Kursprojekt (GridSpark AG) übernommen: Alert-Konfiguration (Push/Pull individuell je Investor einstellbar) und Audit-Trail/Zugriffsprotokoll fürs Investor-Portal – beide Bestandteil des Compliance-Layers oben.</div>
       <div class="link-box">🔗 Diese Phase erzeugt die beiden Oberflächen, die im Demo-Tool "KIGIR-Cockpit" (siehe Fussnote) mit HealthFlow-AG-Beispieldaten gezeigt werden: das interne Gründer-Cockpit und das externe Investor-Portal – zwei Zugriffsansichten auf dieselbe Datenbasis.</div>
       <div class="output-row">
         <span class="output-lbl">Output:</span>
@@ -737,7 +749,7 @@ const data = {
         'Longlist priorisieren: wer passt am besten zu Branche, Ticket, Risikoprofil?',
         'Netzwerkanalyse: Warm-Introduction-Potenzial identifizieren'
       ]},
-      { label: 'Beispiel-Prompt', type: 'p', text: '"Hier sind 20 Investor-Profile. Unser Startup ist ein Digital Health B2B SaaS, Seed-Phase. Score und ranke die Investoren nach Fit. Begründe die Top 5."' }
+      { label: 'Beispiel-Prompt', type: 'p', text: "hier sind 20 Investor-Profile. Unser Startup ist ein Digital Health B2B SaaS, Seed-Phase. Score und ranke die Investoren nach Fit. Begründe die Top 5." }
     ],
     stop: 'In dieser Phase bleibt KI auf Research und Priorisierung beschränkt. Die Erstansprache selbst folgt der gelockerten Leitplanke in Phase 3: teilautomatisiert zulässig, aber mit zwingender menschlicher Prüfung vor Versand.'
   },
@@ -765,7 +777,7 @@ const data = {
         'KPI-Interpretationsfunktion: Rohkennzahlen werden eingeordnet statt nur dargestellt'
       ]},
       { label: 'Beispiel-Prompt', type: 'p', text: '"Hier sind unsere Q1-KPIs: ARR CHF 148k (+34%), 23 Kunden, Runway 14 Monate, NPS 8.2. Schreib ein Quartals-Update. Ton: direkt, keine Floskeln, 300 Wörter max."' },
-      { label: 'Hinweis', type: 'p', text: 'Alert-Konfiguration und Audit-Trail (Teil des Compliance-Layers, Kapitel 5.5). Die KPI-Interpretationsfunktion ist zusätzlich durch eine Konsultation mit Prof. Dr. Falk Uebernickel gestützt: Rohe Kennzahlen ohne Einordnung werden leicht fehlinterpretiert, etwa bei der Burn-Rate.' }
+      { label: 'Ergänzung aus dem Pitchly-Kursprojekt', type: 'p', text: 'Alert-Konfiguration und Audit-Trail (Teil des Compliance-Layers). Die KPI-Interpretationsfunktion ist zusätzlich durch eine Konsultation mit Prof. Dr. Falk Uebernickel gestützt: Rohe Kennzahlen ohne Einordnung werden leicht fehlinterpretiert, etwa bei der Burn-Rate.' }
     ]
   },
   'out1': {
@@ -826,7 +838,7 @@ const data = {
         'Phase 3: Gesprächsnotizen, Pipeline (falls kein HubSpot)',
         'Phase 4: Investor-Portal und Sales Knowledge Base'
       ]},
-      { label: 'Kernvorteil', type: 'p', text: 'Alle Phasen greifen auf denselben Inhaltsstand zu. Synced Blocks verhindern, dass verschiedene Dokumente verschiedene Zahlen zeigen.' }
+      { label: 'Kernvorteil', type: 'p', text: 'Alle Phasen greifen auf denselben Inlaltsstand zu. Synced Blocks verhindern, dass verschiedene Dokumente verschiedene Zahlen zeigen.' }
     ],
     tip: 'Notion Free-Plan reicht für Frühphasen-Startups vollständig aus.'
   },
