@@ -5,448 +5,1291 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KIGIR-Cockpit – Demoversion | HealthFlow AG</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; background: #f5f5f3; color: #222; min-height: 100vh; padding: 2rem 1rem; line-height: 1.5; }
-  .container { max-width: 980px; margin: 0 auto; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; background: #f5f5f3; color: #222; min-height: 100vh; padding: 2rem 1rem; line-height: 1.5; }
+.container { max-width: 980px; margin: 0 auto; }
 
-  .title-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 1rem; }
-  h1 { font-size: 21px; font-weight: 700; color: #1F4E79; margin-bottom: 4px; }
-  .subtitle { font-size: 13px; color: #666; }
-  .meta-badge { font-size: 11px; color: #fff; background: #1F4E79; padding: 6px 12px; border-radius: 8px; text-align: right; line-height: 1.4; white-space: nowrap; }
+.title-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 1rem; }
+h1 { font-size: 21px; font-weight: 700; color: #1F4E79; margin-bottom: 4px; }
+.subtitle { font-size: 13px; color: #666; }
+.meta-badge { font-size: 11px; color: #fff; background: #1F4E79; padding: 6px 12px; border-radius: 8px; text-align: right; line-height: 1.4; white-space: nowrap; }
 
-  .onboard-box { background: #fff; border: 1px solid #ddd; border-left: 4px solid #1F4E79; border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem; }
-  .onboard-title { font-size: 13px; font-weight: 700; color: #1F4E79; margin-bottom: 6px; }
-  .onboard-box p { font-size: 13px; color: #444; margin-bottom: 6px; }
-  .clickhint { font-size: 12px !important; color: #777 !important; font-style: italic; margin-bottom: 0 !important; }
-  .fictive-note { font-size: 11.5px; color: #999; font-style: italic; }
+.onboard-box { background: #fff; border: 1px solid #ddd; border-left: 4px solid #1F4E79; border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem; }
+.onboard-title { font-size: 13px; font-weight: 700; color: #1F4E79; margin-bottom: 6px; }
+.onboard-box p { font-size: 13px; color: #444; margin-bottom: 6px; }
+.clickhint { font-size: 12px !important; color: #777 !important; font-style: italic; margin-bottom: 0 !important; }
+.fictive-note { font-size: 11.5px !important; color: #bbb !important; font-style: italic; margin-bottom: 0 !important; }
 
-  /* ROLE SWITCH */
-  .role-switch { display: flex; gap: 10px; margin-bottom: 1.5rem; }
-  .role-btn { flex: 1; font-size: 14px; font-weight: 700; padding: 14px; border: 2px solid #ccc; border-radius: 10px; cursor: pointer; background: #fff; color: #555; transition: all 0.15s; text-align: center; }
-  .role-btn:hover { border-color: #1F4E79; }
-  .role-btn.active { background: #1F4E79; color: #fff; border-color: #1F4E79; }
+.role-switch { display: flex; gap: 10px; margin-bottom: 1.5rem; }
+.role-btn { flex: 1; font-size: 14px; font-weight: 700; padding: 14px; border: 2px solid #ccc; border-radius: 10px; cursor: pointer; background: #fff; color: #555; transition: all 0.15s; text-align: center; }
+.role-btn:hover { border-color: #1F4E79; color: #1F4E79; }
+.role-btn.active { background: #1F4E79; color: #fff; border-color: #1F4E79; }
 
-  .view { display: none; }
-  .view.visible { display: block; }
+.view { display: none; }
+.view.visible { display: block; }
 
-  .card { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
-  .card-label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+.card { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+.card-label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
 
-  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
-  @media (max-width: 620px) { .metrics { grid-template-columns: repeat(2,1fr); } }
-  .metric { background: #f5f5f3; border-radius: 8px; padding: 12px; text-align: center; }
-  .metric .val { font-size: 20px; font-weight: 700; display: block; }
-  .metric .lbl { font-size: 11px; color: #888; margin-top: 3px; line-height: 1.3; }
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+@media (max-width: 620px) { .metrics { grid-template-columns: repeat(2,1fr); } }
+.metric { background: #f5f5f3; border-radius: 8px; padding: 12px; text-align: center; }
+.metric .val { font-size: 20px; font-weight: 700; display: block; }
+.metric .lbl { font-size: 11px; color: #888; margin-top: 3px; line-height: 1.3; }
 
-  .pipeline { display: flex; margin-bottom: 4px; }
-  .pipe-step { flex: 1; text-align: center; padding: 10px 4px; border: 1px solid #ddd; font-size: 11px; position: relative; background: #fff; }
-  .pipe-step:not(:last-child)::after { content: "›"; position: absolute; right: -8px; top: 50%; transform: translateY(-50%); z-index: 1; font-size: 16px; color: #aaa; }
-  .pipe-step .pn { font-size: 18px; font-weight: 700; }
-  .pipe-step .pl { font-size: 10px; color: #888; margin-top: 2px; }
-  .pipe-step:first-child { border-radius: 8px 0 0 8px; background: #E1F5EE; }
-  .pipe-step:last-child { border-radius: 0 8px 8px 0; background: #E1F5EE; }
+.audit-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.audit-table th { text-align: left; padding: 6px 8px; border-bottom: 1px solid #ddd; color: #888; font-weight: 700; font-size: 11px; }
+.audit-table td { padding: 6px 8px; border-bottom: 1px solid #f0f0ee; color: #444; }
 
-  .audit-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  .audit-table th { text-align: left; padding: 6px 8px; border-bottom: 1px solid #ddd; color: #888; font-weight: 700; font-size: 11px; }
-  .audit-table td { padding: 6px 8px; border-bottom: 1px solid #f0f0ee; color: #444; }
+/* FOUNDER DASHBOARD */
+.dash-header { display: grid; grid-template-columns: 1fr 1.6fr; gap: 12px; margin-bottom: 12px; }
+@media (max-width: 680px) { .dash-header { grid-template-columns: 1fr; } }
+.ampel-group { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 14px 16px; }
+.ampel-title { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+.ampel-row { display: flex; gap: 10px; }
+.ampel-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.ampel-dot { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; }
+.ampel-green { background: #1D9E75; box-shadow: 0 0 6px rgba(29,158,117,0.4); }
+.ampel-yellow { background: #F0C050; box-shadow: 0 0 6px rgba(240,192,80,0.4); }
+.ampel-label { font-size: 11px; color: #666; line-height: 1.3; text-align: center; }
+.progress-group { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 14px 16px; }
+.progress-label-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.progress-title { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.05em; }
+.progress-pct { font-size: 22px; font-weight: 700; color: #1F4E79; }
+.progress-bar-outer { background: #e8e8e4; border-radius: 8px; height: 16px; overflow: hidden; margin-bottom: 8px; }
+.progress-bar-inner { height: 100%; border-radius: 8px; background: linear-gradient(90deg, #1D9E75 0%, #378ADD 100%); }
+.progress-legend { display: flex; gap: 16px; flex-wrap: wrap; }
+.prog-leg-item { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: #666; }
+.prog-leg-dot { width: 9px; height: 9px; border-radius: 50%; }
 
-  /* ACCESS LEVEL SELECTOR */
-  .access-selector { display: flex; gap: 6px; margin-bottom: 1rem; background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 6px; }
-  .access-btn { flex: 1; font-size: 12.5px; font-weight: 700; padding: 10px 8px; border-radius: 7px; cursor: pointer; text-align: center; color: #666; transition: all 0.15s; border: none; background: transparent; }
-  .access-btn:hover { background: #f2f2f0; }
-  .access-btn.active { background: #1F4E79; color: #fff; }
-  .access-explain { font-size: 12px; color: #888; margin-bottom: 1.25rem; font-style: italic; }
+.dash-main { display: grid; grid-template-columns: 1fr 1.3fr 1fr; gap: 12px; margin-bottom: 12px; }
+@media (max-width: 780px) { .dash-main { grid-template-columns: 1fr; } }
+.tl-wrap { position: relative; }
+.tl-item { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; position: relative; }
+.tl-item:last-child { margin-bottom: 0; }
+.tl-connector { position: absolute; left: 9px; top: 22px; bottom: -14px; width: 2px; background: #e5e5e0; }
+.tl-item:last-child .tl-connector { display: none; }
+.tl-dot { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+.tl-done { background: #E1F5EE; border: 2px solid #1D9E75; color: #1D9E75; }
+.tl-current { background: #E6F1FB; border: 2px solid #378ADD; color: #378ADD; }
+.tl-next-dot { background: #f5f5f3; border: 2px dashed #ccc; color: #ccc; }
+.tl-text { font-size: 12.5px; color: #555; line-height: 1.4; }
+.tl-bold { font-weight: 700; color: #111; font-size: 13px; }
+.tl-meta { font-size: 11px; color: #aaa; margin-top: 1px; }
+.tl-badge { display: inline-block; background: #E6F1FB; color: #185FA5; font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-top: 4px; }
 
-  .gate-lock { display: none; background: #f8f8f6; border: 1.5px dashed #ccc; border-radius: 10px; padding: 18px; text-align: center; color: #999; font-size: 13px; }
-  .gate-lock .lock-icon { font-size: 20px; margin-bottom: 6px; display: block; }
+.thermo-wrap { margin-bottom: 14px; }
+.thermo-label-row { display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-bottom: 5px; }
+.thermo-outer { background: #e8e8e4; border-radius: 8px; height: 20px; overflow: hidden; }
+.thermo-inner { height: 100%; background: linear-gradient(90deg, #1F4E79, #378ADD); border-radius: 8px; display: flex; align-items: center; padding-right: 8px; }
+.thermo-pct-label { font-size: 11px; font-weight: 700; color: #fff; margin-left: auto; }
+.investor-list { list-style: none; padding: 0; }
+.inv-item { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #f0f0ee; }
+.inv-item:last-child { border-bottom: none; }
+.inv-name { font-size: 12.5px; font-weight: 600; color: #333; }
+.inv-detail { font-size: 11px; color: #aaa; }
+.inv-amount { font-size: 13px; font-weight: 700; color: #1F4E79; white-space: nowrap; }
 
-  /* PORTAL HEADER */
-  .portal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 8px; }
-  .portal-logo { font-size: 16px; font-weight: 700; color: #1F4E79; }
-  .portal-meta { font-size: 12px; color: #999; margin-top: 2px; }
-  .access-badge { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; background: #E1F5EE; color: #0F6E56; border: 1px solid #9FE1CB; margin-left: 6px; }
+.pipe-tier { margin-bottom: 12px; }
+.pipe-tier:last-child { margin-bottom: 0; }
+.pipe-tier-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+.tier-hot { color: #1D9E75; } .tier-mid { color: #BA7517; } .tier-cold { color: #185FA5; }
+.pipe-inv { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; border-radius: 7px; margin-bottom: 4px; background: #f8f8f6; }
+.pipe-inv:last-child { margin-bottom: 0; }
+.pi-name { font-size: 12.5px; font-weight: 600; color: #333; }
+.pi-status { font-size: 11px; color: #888; }
+.prob-badge { font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 10px; white-space: nowrap; }
+.prob-hot { background: #E1F5EE; color: #085041; }
+.prob-mid { background: #FAEEDA; color: #854F0B; }
+.prob-cold { background: #E6F1FB; color: #185FA5; }
 
-  .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  @media (max-width: 620px) { .kpi-grid { grid-template-columns: repeat(2,1fr); } }
-  .kpi-card { background: #f5f5f3; border-radius: 8px; padding: 12px; position: relative; }
-  .kpi-val { font-size: 19px; font-weight: 700; color: #111; }
-  .kpi-lbl { font-size: 11px; color: #888; margin-top: 2px; }
-  .kpi-delta { font-size: 11px; margin-top: 2px; }
-  .delta-up { color: #1D9E75; } .delta-flat { color: #888; }
-  .kpi-explain-btn { font-size: 10.5px; color: #378ADD; cursor: pointer; margin-top: 6px; display: inline-block; font-weight: 600; }
-  .kpi-explain-btn:hover { text-decoration: underline; }
-  .kpi-explain-text { display: none; font-size: 11.5px; color: #555; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #ddd; line-height: 1.5; }
-  .kpi-explain-text.open { display: block; }
+/* BUSINESS KPIs */
+.biz-section-label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+.biz-grid-top { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px; }
+.biz-grid-bot { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+@media (max-width: 620px) { .biz-grid-top, .biz-grid-bot { grid-template-columns: repeat(2,1fr); } }
+.biz-kpi { background: #f5f5f3; border-radius: 8px; padding: 10px 12px; }
+.biz-val { font-size: 18px; font-weight: 700; color: #111; }
+.biz-lbl { font-size: 11px; color: #888; margin-top: 2px; line-height: 1.3; }
+.biz-delta { font-size: 11px; margin-top: 3px; }
+.d-up { color: #1D9E75; } .d-flat { color: #888; } .d-warn { color: #BA7517; }
 
-  .milestone-list { list-style: none; padding: 0; }
-  .milestone-list li { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0f0ee; font-size: 13px; }
-  .milestone-list li:last-child { border-bottom: none; }
-  .ms-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
-  .ms-done { background: #1D9E75; } .ms-active { background: #378ADD; } .ms-next { background: #ddd; }
-  .ms-text { flex: 1; color: #333; }
-  .ms-date { font-size: 11px; color: #aaa; white-space: nowrap; }
+/* MRR TREND CHART */
+.chart-wrap { display: flex; align-items: flex-end; gap: 8px; height: 90px; margin-bottom: 8px; }
+.chart-col { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; }
+.chart-bar { width: 100%; border-radius: 4px 4px 0 0; min-height: 4px; }
+.chart-v { font-size: 10px; font-weight: 700; color: #1F4E79; margin-bottom: 3px; }
+.chart-m { font-size: 10px; color: #aaa; margin-top: 4px; }
 
-  .update-item { padding: 9px 0; border-bottom: 1px solid #f0f0ee; }
-  .update-item:last-child { border-bottom: none; }
-  .update-title { font-size: 13px; font-weight: 600; color: #111; margin-bottom: 2px; }
-  .update-meta { font-size: 11px; color: #aaa; }
+/* CUSTOMER FUNNEL */
+.funnel-row { display: flex; gap: 0; margin-bottom: 4px; }
+.funnel-step { flex: 1; text-align: center; padding: 8px 4px; font-size: 11px; border: 1px solid #ddd; background: #fff; position: relative; }
+.funnel-step:not(:last-child)::after { content: "›"; position: absolute; right: -8px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #ccc; z-index: 1; }
+.funnel-step:first-child { border-radius: 8px 0 0 8px; }
+.funnel-step:last-child { border-radius: 0 8px 8px 0; background: #E1F5EE; }
+.funnel-n { font-size: 18px; font-weight: 700; }
+.funnel-l { font-size: 10px; color: #888; margin-top: 2px; }
 
-  .doc-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0ee; font-size: 13px; }
-  .doc-row:last-child { border-bottom: none; }
-  .doc-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; }
-  .badge-public { background: #E1F5EE; color: #0F6E56; }
-  .badge-investor { background: #E6F1FB; color: #185FA5; }
-  .badge-shareholder { background: #EEEDFE; color: #534AB7; }
+/* BLOCKER */
+.blocker-row { display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px; margin-bottom: 12px; }
+@media (max-width: 620px) { .blocker-row { grid-template-columns: 1fr; } }
+.blocker-box { background: #fff; border: 2px solid #E24B4A; border-radius: 10px; padding: 12px 14px; }
+.blocker-title { font-size: 11px; font-weight: 700; color: #E24B4A; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.blocker-item { display: flex; gap: 8px; font-size: 12.5px; color: #444; margin-bottom: 6px; align-items: flex-start; line-height: 1.45; }
+.blocker-item:last-child { margin-bottom: 0; }
+.blocker-bullet { color: #E24B4A; flex-shrink: 0; }
+.next-update-box { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 12px 14px; }
+.next-update-title { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.upd-event { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #f0f0ee; font-size: 12.5px; color: #444; }
+.upd-event:last-child { border-bottom: none; }
+.upd-date { font-size: 12px; font-weight: 700; color: #1F4E79; white-space: nowrap; }
 
-  .portal-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  @media (max-width: 640px) { .portal-two-col { grid-template-columns: 1fr; } }
+.bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+@media (max-width: 620px) { .bottom-row { grid-template-columns: 1fr; } }
 
-  .info-box { background: #FAEEDA; border-left: 3px solid #BA7517; border-radius: 4px; padding: 10px 12px; font-size: 12.5px; color: #6b4a0a; margin-bottom: 1rem; }
-  .compliance-note { background: #F5F5F3; border-left: 3px solid #999; border-radius: 4px; padding: 8px 12px; font-size: 11.5px; color: #777; margin-top: 1rem; }
+/* ── INVESTOR PORTAL ─────────────────────────────────── */
+.access-selector { display: flex; gap: 6px; margin-bottom: 1rem; background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 6px; }
+.access-btn { flex: 1; font-size: 12.5px; font-weight: 700; padding: 10px 8px; border-radius: 7px; cursor: pointer; text-align: center; color: #666; transition: all 0.15s; border: none; background: transparent; }
+.access-btn:hover { background: #f2f2f0; }
+.access-btn.active { background: #1F4E79; color: #fff; }
+.access-explain { font-size: 12px; color: #888; margin-bottom: 1.25rem; font-style: italic; }
+.portal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 8px; }
+.portal-logo { font-size: 16px; font-weight: 700; color: #1F4E79; }
+.portal-meta { font-size: 12px; color: #999; margin-top: 2px; }
+.access-badge { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; background: #E1F5EE; color: #0F6E56; border: 1px solid #9FE1CB; margin-left: 6px; }
 
-  /* ALERT CONFIG */
-  .alert-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
-  .alert-option { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1.5px solid #ddd; border-radius: 8px; cursor: pointer; font-size: 13px; color: #444; transition: border-color 0.15s; }
-  .alert-option:hover { border-color: #378ADD; }
-  .alert-option input { cursor: pointer; }
-  .alert-confirm { font-size: 12px; color: #1D9E75; font-weight: 600; display: none; }
-  .alert-confirm.show { display: block; }
+/* PUBLIC LEVEL */
+.hero-card { background: linear-gradient(135deg, #1F4E79 0%, #2563A8 100%); border: none; padding: 2rem; }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.2); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; letter-spacing: 0.04em; }
+.hero-headline { font-size: 22px; font-weight: 700; color: #fff; line-height: 1.3; margin-bottom: 10px; }
+.hero-sub { font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.6; max-width: 600px; }
 
-  /* FAQ */
-  .faq-item { border-bottom: 1px solid #f0f0ee; }
-  .faq-item:last-child { border-bottom: none; }
-  .faq-q { padding: 12px 4px; font-size: 13.5px; font-weight: 600; color: #222; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-  .faq-q:hover { color: #1F4E79; }
-  .faq-a { display: none; font-size: 13px; color: #555; padding: 0 4px 12px; line-height: 1.6; }
-  .faq-a.open { display: block; }
-  .faq-chevron { transition: transform 0.15s; color: #999; }
-  .faq-chevron.rot { transform: rotate(90deg); }
+.prob-sol-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1rem; }
+@media (max-width: 620px) { .prob-sol-grid { grid-template-columns: 1fr; } }
+.prob-card { background: #fff8f7; border: 1.5px solid #E24B4A; border-radius: 12px; padding: 1.25rem; }
+.sol-card { background: #f0faf6; border: 1.5px solid #1D9E75; border-radius: 12px; padding: 1.25rem; }
+.ps-headline { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+.prob-card .ps-headline { color: #a53030; }
+.sol-card .ps-headline { color: #0F6E56; }
+.ps-list { list-style: none; padding: 0; }
+.ps-list li { font-size: 12.5px; color: #555; padding: 4px 0; padding-left: 16px; position: relative; line-height: 1.5; }
+.ps-list li::before { content: "▸"; position: absolute; left: 0; color: #aaa; }
 
-  footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font-size: 11.5px; color: #999; text-align: center; line-height: 1.6; }
+.tam-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+@media (max-width: 620px) { .tam-grid { grid-template-columns: repeat(2,1fr); } }
+.tam-item { background: #f5f5f3; border-radius: 8px; padding: 12px; text-align: center; }
+.tam-val { font-size: 17px; font-weight: 700; color: #1F4E79; }
+.tam-lbl { font-size: 11px; color: #888; margin-top: 3px; line-height: 1.3; }
 
-  /* SITE NAV */
-  .sitenav { display: flex; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap; }
-  .sitenav a { font-size: 12.5px; font-weight: 600; padding: 7px 14px; border: 1.5px solid #ccc; border-radius: 20px; text-decoration: none; color: #555; background: #fff; transition: all 0.15s; }
-  .sitenav a:hover { border-color: #1F4E79; color: #1F4E79; }
-  .sitenav a.active { background: #1F4E79; color: #fff; border-color: #1F4E79; cursor: default; pointer-events: none; }
+.cta-wrapper { text-align: center; padding: 1.5rem 0 0.5rem; }
+.cta-btn { background: #1F4E79; color: #fff; font-size: 14px; font-weight: 700; padding: 14px 28px; border: none; border-radius: 10px; cursor: pointer; transition: background 0.15s; }
+.cta-btn:hover { background: #163d61; }
+.cta-demo-msg { display: none; font-size: 12px; color: #1D9E75; font-weight: 600; margin-top: 10px; }
+
+/* CONTACT LEVEL */
+.op-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0; }
+@media (max-width: 620px) { .op-grid { grid-template-columns: 1fr; } }
+.op-section { background: #f8f8f6; border-radius: 8px; padding: 12px 14px; }
+.op-title { font-size: 11px; font-weight: 700; color: #1F4E79; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+.op-text { font-size: 12.5px; color: #555; line-height: 1.55; }
+
+.team-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+@media (max-width: 620px) { .team-grid { grid-template-columns: 1fr; } }
+.team-card { background: #f8f8f6; border-radius: 10px; padding: 14px; text-align: center; }
+.team-avatar { width: 44px; height: 44px; border-radius: 50%; background: #1F4E79; color: #fff; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+.team-name { font-size: 13px; font-weight: 700; color: #111; margin-bottom: 3px; }
+.team-role { font-size: 11px; color: #378ADD; font-weight: 600; margin-bottom: 8px; }
+.team-bio { font-size: 11.5px; color: #666; line-height: 1.45; }
+
+.roadmap-chart { display: flex; align-items: flex-end; gap: 10px; height: 100px; margin-bottom: 8px; padding-bottom: 4px; }
+.rd-col { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; }
+.rd-bar { width: 100%; border-radius: 4px 4px 0 0; }
+.rd-val { font-size: 11px; font-weight: 700; color: #1F4E79; margin-bottom: 3px; }
+.rd-yr { font-size: 10.5px; color: #aaa; margin-top: 5px; }
+.rd-note { font-size: 11px; color: #bbb; text-align: right; }
+
+.funds-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 8px; }
+.fund-item { background: #f8f8f6; border-radius: 8px; padding: 10px 12px; }
+.fund-bar-outer { background: #e8e8e4; border-radius: 4px; height: 8px; margin-bottom: 6px; overflow: hidden; }
+.fund-bar-inner { height: 100%; border-radius: 4px; }
+.fund-lbl { font-size: 11.5px; color: #444; font-weight: 600; }
+.fund-pct { font-size: 13px; font-weight: 700; color: #1F4E79; }
+
+.nda-cta-box { background: #f0faf6; border: 2px solid #1D9E75; border-radius: 10px; padding: 16px; text-align: center; margin-top: 12px; }
+.nda-cta-title { font-size: 14px; font-weight: 700; color: #0F6E56; margin-bottom: 6px; }
+.nda-cta-sub { font-size: 12.5px; color: #555; margin-bottom: 12px; }
+.nda-btn { background: #1D9E75; color: #fff; font-size: 13px; font-weight: 700; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; }
+.nda-btn:hover { background: #138a61; }
+.nda-demo-msg { display: none; font-size: 12px; color: #1D9E75; font-weight: 600; margin-top: 8px; }
+
+/* NDA LEVEL */
+.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+@media (max-width: 620px) { .kpi-grid { grid-template-columns: repeat(2,1fr); } }
+.kpi-card { background: #f5f5f3; border-radius: 8px; padding: 12px; }
+.kpi-val { font-size: 19px; font-weight: 700; color: #111; }
+.kpi-lbl { font-size: 11px; color: #888; margin-top: 2px; }
+.kpi-delta { font-size: 11px; margin-top: 2px; }
+.delta-up { color: #1D9E75; } .delta-flat { color: #888; }
+.kpi-explain-btn { font-size: 10.5px; color: #378ADD; cursor: pointer; margin-top: 6px; display: inline-block; font-weight: 600; }
+.kpi-explain-btn:hover { text-decoration: underline; }
+.kpi-explain-text { display: none; font-size: 11.5px; color: #555; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #ddd; line-height: 1.5; }
+.kpi-explain-text.open { display: block; }
+
+.cap-list { list-style: none; padding: 0; }
+.cap-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.cap-item:last-child { margin-bottom: 0; }
+.cap-lbl { font-size: 12.5px; color: #333; font-weight: 600; width: 160px; flex-shrink: 0; }
+.cap-bar-outer { flex: 1; background: #e8e8e4; border-radius: 6px; height: 18px; overflow: hidden; }
+.cap-bar-inner { height: 100%; border-radius: 6px; }
+.cap-pct { font-size: 12.5px; font-weight: 700; color: #1F4E79; width: 36px; text-align: right; flex-shrink: 0; }
+.cap-note { font-size: 11.5px; color: #888; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e8e8e4; }
+
+.fomo-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 10px; }
+.fomo-card { background: #f8f8f6; border-radius: 8px; padding: 10px 12px; text-align: center; }
+.fomo-val { font-size: 20px; font-weight: 700; color: #1F4E79; }
+.fomo-lbl { font-size: 11px; color: #888; margin-top: 3px; line-height: 1.3; }
+
+.vault-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+@media (max-width: 620px) { .vault-grid { grid-template-columns: 1fr; } }
+.vault-folder { background: #f8f8f6; border-radius: 8px; padding: 12px 14px; }
+.vault-folder-title { font-size: 12.5px; font-weight: 700; color: #1F4E79; margin-bottom: 8px; }
+.vault-file { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #444; padding: 4px 0; border-bottom: 1px solid #f0f0ee; }
+.vault-file:last-child { border-bottom: none; }
+.vault-file::before { content: "📄"; font-size: 11px; }
+
+.milestone-list { list-style: none; padding: 0; }
+.milestone-list li { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0f0ee; font-size: 13px; }
+.milestone-list li:last-child { border-bottom: none; }
+.ms-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.ms-done { background: #1D9E75; } .ms-active { background: #378ADD; } .ms-next { background: #ddd; }
+.ms-text { flex: 1; color: #333; } .ms-date { font-size: 11px; color: #aaa; white-space: nowrap; }
+
+.update-item { padding: 9px 0; border-bottom: 1px solid #f0f0ee; }
+.update-item:last-child { border-bottom: none; }
+.update-title { font-size: 13px; font-weight: 600; color: #111; margin-bottom: 2px; }
+.update-meta { font-size: 11px; color: #aaa; }
+
+.doc-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0ee; font-size: 13px; }
+.doc-row:last-child { border-bottom: none; }
+.doc-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; }
+.badge-public { background: #E1F5EE; color: #0F6E56; }
+.badge-investor { background: #E6F1FB; color: #185FA5; }
+.badge-shareholder { background: #EEEDFE; color: #534AB7; }
+
+.portal-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 640px) { .portal-two-col { grid-template-columns: 1fr; } }
+
+.alert-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.alert-option { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1.5px solid #ddd; border-radius: 8px; cursor: pointer; font-size: 13px; color: #444; transition: border-color 0.15s; }
+.alert-option:hover { border-color: #378ADD; }
+.alert-confirm { font-size: 12px; color: #1D9E75; font-weight: 600; display: none; }
+.alert-confirm.show { display: block; }
+
+.faq-item { border-bottom: 1px solid #f0f0ee; }
+.faq-item:last-child { border-bottom: none; }
+.faq-q { padding: 12px 4px; font-size: 13.5px; font-weight: 600; color: #222; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+.faq-q:hover { color: #1F4E79; }
+.faq-a { display: none; font-size: 13px; color: #555; padding: 0 4px 12px; line-height: 1.6; }
+.faq-a.open { display: block; }
+.faq-chevron { transition: transform 0.15s; color: #999; }
+.faq-chevron.rot { transform: rotate(90deg); }
+
+.gated-hint { background: #fff8f7; border-left: 3px solid #E24B4A; border-radius: 4px; padding: 10px 12px; font-size: 12.5px; color: #a53030; margin-bottom: 10px; display: none; }
+.gate-lock { display: none; background: #f8f8f6; border: 1.5px dashed #ccc; border-radius: 10px; padding: 18px; text-align: center; color: #999; font-size: 13px; }
+.gate-lock .lock-icon { font-size: 20px; margin-bottom: 6px; display: block; }
+.compliance-note { background: #f5f5f3; border-left: 3px solid #ccc; border-radius: 4px; padding: 8px 12px; font-size: 11.5px; color: #888; margin-top: 1rem; }
+
+/* COMPETITOR INTELLIGENCE */
+.ci-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.ci-scan-status { font-size: 11px; color: #1D9E75; font-weight: 700; }
+.ci-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (max-width: 620px) { .ci-grid { grid-template-columns: 1fr; } }
+.ci-card { background: #f8f8f6; border: 1.5px solid #e8e8e4; border-radius: 10px; padding: 12px 14px; transition: border-color 0.15s; cursor: default; }
+.ci-card:hover { border-color: #bbb; }
+.ci-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+.ci-badges { display: flex; gap: 6px; align-items: center; }
+.ci-source { font-size: 11px; color: #888; font-weight: 600; }
+.ci-date { font-size: 11px; color: #bbb; }
+.ci-cat { font-size: 10.5px; font-weight: 700; padding: 2px 9px; border-radius: 20px; }
+.cat-fin { background: #E6F1FB; color: #185FA5; }
+.cat-prod { background: #E1F5EE; color: #0F6E56; }
+.cat-reg { background: #FAEEDA; color: #854F0B; }
+.cat-par { background: #EEEDFE; color: #534AB7; }
+.ci-title { font-size: 13px; font-weight: 700; color: #111; margin-bottom: 5px; line-height: 1.35; }
+.ci-desc { font-size: 12px; color: #666; line-height: 1.5; margin-bottom: 9px; }
+.ci-rel-row { display: flex; align-items: center; gap: 8px; }
+.ci-rel-label { font-size: 11px; color: #999; white-space: nowrap; }
+.ci-rel-bar-outer { flex: 1; background: #e8e8e4; border-radius: 4px; height: 6px; overflow: hidden; }
+.ci-rel-bar-inner { height: 100%; border-radius: 4px; }
+.ci-rel-pct { font-size: 11px; font-weight: 700; color: #555; white-space: nowrap; }
+.ci-note { font-size: 11px; color: #bbb; margin-top: 10px; font-style: italic; }
+
+/* NEWS & BERICHTE (Investor-Portal) */
+.news-tab-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.n-tab { padding: 6px 14px; font-size: 12px; font-weight: 700; border: 1.5px solid #ddd; border-radius: 20px; cursor: pointer; background: #fff; color: #666; transition: all 0.15s; }
+.n-tab.active { background: #1F4E79; color: #fff; border-color: #1F4E79; }
+.news-item { border-left: 3px solid #378ADD; padding: 10px 14px; margin-bottom: 10px; background: #f8f8f6; border-radius: 0 8px 8px 0; }
+.news-item:last-child { margin-bottom: 0; }
+.news-date { font-size: 11px; color: #aaa; margin-bottom: 4px; }
+.news-title { font-size: 13px; font-weight: 700; color: #111; margin-bottom: 4px; font-style: italic; }
+.news-text { font-size: 12.5px; color: #555; line-height: 1.55; }
+
+/* INVESTOREN-DIALOG */
+.dialog-outer { border: 1px solid #ddd; border-radius: 10px; overflow: hidden; }
+.dialog-tab-row { display: flex; background: #f8f8f6; border-bottom: 1px solid #ddd; }
+.d-tab { padding: 10px 16px; font-size: 12.5px; font-weight: 700; cursor: pointer; color: #777; border: none; background: transparent; border-bottom: 2px solid transparent; transition: all 0.15s; }
+.d-tab.active { color: #1F4E79; border-bottom-color: #1F4E79; }
+.dialog-body { padding: 14px; max-height: 260px; overflow-y: auto; }
+.msg-row { margin-bottom: 12px; }
+.msg-row:last-child { margin-bottom: 0; }
+.msg-sender { font-size: 11px; font-weight: 700; color: #888; margin-bottom: 4px; }
+.tag-wichtig { display: inline-block; font-size: 10px; font-weight: 700; background: #FAEEDA; color: #854F0B; padding: 2px 8px; border-radius: 10px; margin-bottom: 5px; }
+.msg-bubble { display: inline-block; padding: 10px 14px; border-radius: 10px; font-size: 13px; line-height: 1.5; max-width: 85%; }
+.msg-in { background: #f0f0ee; color: #333; }
+.msg-out-row { display: flex; flex-direction: column; align-items: flex-end; }
+.msg-sender-right { font-size: 11px; font-weight: 700; color: #888; margin-bottom: 4px; text-align: right; }
+.msg-out { background: #1F4E79; color: #fff; }
+.msg-time { font-size: 10.5px; color: #bbb; margin-top: 3px; }
+.msg-time-right { font-size: 10.5px; color: #bbb; margin-top: 3px; text-align: right; }
+.dialog-input-row { display: flex; gap: 8px; padding: 10px 14px; border-top: 1px solid #ddd; background: #f8f8f6; }
+.dialog-input-field { flex: 1; border: 1.5px solid #ddd; border-radius: 8px; padding: 9px 12px; font-size: 13px; color: #444; font-family: inherit; background: #fff; }
+.dialog-input-field:focus { outline: none; border-color: #378ADD; }
+.dialog-send-btn { background: #1F4E79; color: #fff; font-size: 13px; font-weight: 700; padding: 9px 18px; border: none; border-radius: 8px; cursor: pointer; }
+.dialog-send-btn:hover { background: #163d61; }
+.dialog-demo-note { display: none; font-size: 12px; color: #1D9E75; font-weight: 600; padding: 6px 14px 8px; }
+.broadcast-item { border-left: 3px solid #BA7517; background: #fdf8f0; border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 10px; }
+.broadcast-item:last-child { margin-bottom: 0; }
+.broadcast-title { font-size: 13px; font-weight: 700; color: #633806; margin-bottom: 4px; }
+.broadcast-text { font-size: 12.5px; color: #7a4a0a; line-height: 1.5; }
+.broadcast-date { font-size: 11px; color: #BA7517; margin-top: 4px; }
+
+/* AKTIONÄRS-PORTAL */
+.sh-header-box { background: linear-gradient(135deg, #1F4E79 0%, #163d61 100%); border-radius: 10px; padding: 10px 16px; margin-bottom: 12px; font-size: 12.5px; color: rgba(255,255,255,0.9); }
+.portfolio-banner { background: linear-gradient(135deg, #1F4E79 0%, #2563A8 100%); border-radius: 12px; padding: 1.5rem; margin-bottom: 12px; }
+.portfolio-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.7); margin-bottom: 8px; }
+.portfolio-val { font-size: 26px; font-weight: 700; color: #fff; }
+.portfolio-sub { font-size: 12.5px; color: rgba(255,255,255,0.75); margin-top: 4px; }
+.portfolio-gain { display: inline-block; background: rgba(29,158,117,0.35); color: #8FE8C8; font-size: 12.5px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-top: 8px; }
+.pos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
+@media (max-width: 620px) { .pos-grid { grid-template-columns: repeat(2,1fr); } }
+.pos-item { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 12px; }
+.pos-val { font-size: 16px; font-weight: 700; color: #fff; }
+.pos-lbl { font-size: 10.5px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+.tx-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tx-table th { text-align: left; padding: 6px 10px; border-bottom: 1px solid #ddd; color: #888; font-weight: 700; font-size: 11px; background: #f8f8f6; }
+.tx-table td { padding: 7px 10px; border-bottom: 1px solid #f0f0ee; color: #444; }
+.tx-table tr:last-child td { border-bottom: none; }
+.tx-type { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+.tx-buy { background: #E1F5EE; color: #0F6E56; }
+.tx-coupon { background: #E6F1FB; color: #185FA5; }
+.profile-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (max-width: 580px) { .profile-grid2 { grid-template-columns: 1fr; } }
+.profile-item { background: #f8f8f6; border-radius: 8px; padding: 10px 14px; }
+.profile-key { font-size: 11px; color: #888; font-weight: 700; margin-bottom: 4px; }
+.profile-val { font-size: 13px; color: #333; }
+.cal-row { display: flex; align-items: flex-start; gap: 14px; padding: 8px 0; border-bottom: 1px solid #f0f0ee; }
+.cal-row:last-child { border-bottom: none; }
+.cal-date { font-size: 12px; font-weight: 700; color: #1F4E79; width: 100px; flex-shrink: 0; }
+.cal-event { font-size: 12.5px; color: #444; }
+.cal-badge { display: inline-block; font-size: 10px; padding: 1px 7px; border-radius: 8px; margin-left: 6px; vertical-align: middle; }
+.cal-gv { background: #EEEDFE; color: #534AB7; }
+.cal-upd { background: #E6F1FB; color: #185FA5; }
+.cal-rep { background: #E1F5EE; color: #0F6E56; }
+.gv-invite-box { background: #EEEDFE; border-radius: 8px; padding: 12px 14px; margin-bottom: 14px; font-size: 12.5px; color: #3C3489; font-weight: 600; }
+.gv-doc-list { list-style: none; padding: 0; }
+.gv-doc-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0ee; }
+.gv-doc-item:last-child { border-bottom: none; }
+.gv-doc-name { font-size: 13px; color: #333; }
+.gv-doc-action { font-size: 11px; font-weight: 700; color: #378ADD; cursor: pointer; }
+.gv-doc-action:hover { text-decoration: underline; }
+.ir-contact-box { background: #f8f8f6; border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
+.ir-avatar { width: 48px; height: 48px; border-radius: 50%; background: #1F4E79; color: #fff; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ir-name { font-size: 14px; font-weight: 700; color: #111; }
+.ir-role { font-size: 12px; color: #888; margin-top: 2px; }
+.ir-email { font-size: 12.5px; color: #378ADD; margin-top: 4px; cursor: pointer; }
+.ir-email:hover { text-decoration: underline; }
+.access-selector { display: flex; gap: 6px; margin-bottom: 1rem; background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 6px; flex-wrap: wrap; }
+
+footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font-size: 11.5px; color: #999; text-align: center; line-height: 1.6; }
 </style>
 </head>
 <body>
 <div class="container">
 
-  <div class="sitenav">
-    <a href="index.html">Übersicht</a>
-    <a href="KIGIR_Framework.html">KIGIR-Framework</a>
-    <a href="KIGIR_Cockpit_Demo.html" class="active">KIGIR-Cockpit</a>
+<div class="title-row">
+  <div>
+    <h1>KIGIR-Cockpit – Demoversion</h1>
+    <div class="subtitle">Gründer-Cockpit &amp; Investor-Portal aus Phase 4 des KIGIR-Frameworks · <strong>HealthFlow AG</strong> (fiktives Referenzstartup)</div>
   </div>
+  <div class="meta-badge">Version 2.0<br>Stand: 11.07.2026</div>
+</div>
 
-  <div class="title-row">
-    <div>
-      <h1>KIGIR-Cockpit – Demoversion</h1>
-      <div class="subtitle">Gründer-Cockpit &amp; Investor-Portal aus Phase 4 des KIGIR-Frameworks – <strong>illustrative Beispieldaten für HealthFlow AG</strong> (fiktives Referenzstartup der Transferthesis)</div>
-    </div>
-    <div class="meta-badge">Version 1.0<br>Stand: 11.07.2026</div>
-  </div>
+<div class="onboard-box">
+  <div class="onboard-title">So funktioniert diese Demo</div>
+  <p>Zwei Rollen – eine Datenbasis. <strong>Gründer-Cockpit</strong> (intern): Ampel-Status, Fundraising-Pipeline, vollständige Business-KPIs mit MRR-Trend, Kunden-Akquise-Funnel und Blocker-Dashboard. <strong>Investor-Portal</strong> (extern): drei progressive Zugangsstufen – Schaufenster (öffentlich), Teaser-Level (nach Erstkontakt) und Deep-Dive-Datenraum (nach NDA). Die Zugangsstufen simulieren, wie viel Information je nach Beziehungsstand sichtbar ist.</p>
+  <p class="clickhint">🖱 Klickbar: Rollen-Umschalter · Zugriffsstufen-Regler (inkl. neu: «Aktionär») · «ℹ️ Erklärung»-Links bei KPIs · News-Tabs · Dialog-Tabs · GV-Dokument-Aktionen · Benachrichtigungs-Optionen · FAQ-Akkordeon · CTA-Buttons</p>
+  <p class="fictive-note">Alle Zahlen, Namen und Dokumente sind fiktiv – ausschliesslich zur Illustration des Frameworks.</p>
+</div>
 
-  <div class="onboard-box">
-    <div class="onboard-title">So funktioniert diese Demo</div>
-    <p>Oben wechseln Sie zwischen zwei Rollen, die dieselbe Datenbasis unterschiedlich sehen: dem internen <strong>Gründer-Cockpit</strong> und dem externen <strong>Investor-Portal</strong>. In der Investor-Ansicht steuert der Regler "Zugriffsstufe" zusätzlich, wie viel Information ein Investor je nach Beziehungsstand sieht – von der öffentlichen Kurzinfo bis zum vollständigen, NDA-geschützten Zugang.</p>
-    <p class="clickhint">🖱 Klickbar sind: der Rollen-Umschalter, die Zugriffsstufen, "ℹ️ Erklärung"-Links bei Kennzahlen, die Benachrichtigungs-Optionen sowie die Fragen im Investoren-Fragen-Modul (Akkordeon).</p>
-    <p class="fictive-note">Alle Zahlen, Namen und Dokumente sind fiktiv und dienen ausschliesslich der Illustration des Frameworks.</p>
-  </div>
+<div class="role-switch">
+  <button class="role-btn active" id="role-founder" onclick="setRole('founder')">👤 Ansicht: Gründerteam (Cockpit)</button>
+  <button class="role-btn" id="role-investor" onclick="setRole('investor')">🧑‍💼 Ansicht: Investor (Portal)</button>
+</div>
 
-  <div class="role-switch">
-    <button class="role-btn active" id="role-founder" onclick="setRole('founder')">👤 Ansicht: Gründerteam (Cockpit)</button>
-    <button class="role-btn" id="role-investor" onclick="setRole('investor')">🧑‍💼 Ansicht: Investor (Portal)</button>
-  </div>
+<!-- ═══════════════════════════════════════════════════════════
+     FOUNDER VIEW
+═══════════════════════════════════════════════════════════ -->
+<div id="view-founder" class="view visible">
 
-  <!-- FOUNDER VIEW -->
-  <div id="view-founder" class="view visible">
-    <div class="card">
-      <div class="card-label">Fundraising-Übersicht</div>
-      <div class="metrics">
-        <div class="metric"><span class="val" style="color:#1D9E75">CHF 380k</span><div class="lbl">Zugesagt</div></div>
-        <div class="metric"><span class="val" style="color:#378ADD">12</span><div class="lbl">Aktive Gespräche</div></div>
-        <div class="metric"><span class="val" style="color:#BA7517">CHF 120k</span><div class="lbl">In Verhandlung</div></div>
-        <div class="metric"><span class="val" style="color:#534AB7">76%</span><div class="lbl">Ziel erreicht</div></div>
+  <!-- HEADER: Ampel + Fortschrittsbalken -->
+  <div class="dash-header">
+    <div class="ampel-group">
+      <div class="ampel-title">Status-Ampel Fundraising</div>
+      <div class="ampel-row">
+        <div class="ampel-item">
+          <div class="ampel-dot ampel-green"></div>
+          <div class="ampel-label">Fundraising-<br>Fortschritt</div>
+        </div>
+        <div class="ampel-item">
+          <div class="ampel-dot ampel-yellow"></div>
+          <div class="ampel-label">Pipeline-<br>Gesundheit</div>
+        </div>
+        <div class="ampel-item">
+          <div class="ampel-dot ampel-green"></div>
+          <div class="ampel-label">Kommunikations-<br>rhythmus</div>
+        </div>
       </div>
+    </div>
+    <div class="progress-group">
+      <div class="progress-label-row">
+        <div class="progress-title">Fortschritt Series A — Ziel: CHF 500k</div>
+        <div class="progress-pct">76%</div>
+      </div>
+      <div class="progress-bar-outer">
+        <div class="progress-bar-inner" style="width:76%"></div>
+      </div>
+      <div class="progress-legend">
+        <div class="prog-leg-item"><div class="prog-leg-dot" style="background:#1D9E75"></div>CHF 380k zugesagt</div>
+        <div class="prog-leg-item"><div class="prog-leg-dot" style="background:#F0C050"></div>CHF 120k in Verhandlung</div>
+        <div class="prog-leg-item"><div class="prog-leg-dot" style="background:#e8e8e4"></div>CHF 0 noch offen</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN: Timeline | Investor Board | Pipeline -->
+  <div class="dash-main">
+    <div class="card">
+      <div class="card-label">Meilensteine &amp; Fokus</div>
+      <div class="tl-wrap">
+        <div class="tl-item"><div class="tl-connector"></div><div class="tl-dot tl-done">✓</div><div><div class="tl-text">Seed-Runde (CHF 250k)</div><div class="tl-meta">Jan. 2026</div></div></div>
+        <div class="tl-item"><div class="tl-connector"></div><div class="tl-dot tl-done">✓</div><div><div class="tl-text">Produktlaunch v1.0</div><div class="tl-meta">März 2026</div></div></div>
+        <div class="tl-item"><div class="tl-connector"></div><div class="tl-dot tl-current">→</div><div><div class="tl-text tl-bold">Series A abschliessen</div><div class="tl-meta">CHF 380k von CHF 500k</div><div class="tl-badge">⏱ Zieldatum: 31.07.2026</div></div></div>
+        <div class="tl-item"><div class="tl-connector"></div><div class="tl-dot tl-next-dot">○</div><div><div class="tl-text">Expansion Deutschschweiz</div><div class="tl-meta">Q3 2026</div></div></div>
+        <div class="tl-item"><div class="tl-dot tl-next-dot">○</div><div><div class="tl-text">Produktlaunch v2.0</div><div class="tl-meta">Q4 2026 geplant</div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Investor Board – Commitments</div>
+      <div class="thermo-wrap">
+        <div class="thermo-label-row"><span>CHF 0</span><span style="font-weight:700;color:#1F4E79">CHF 380k</span><span>Ziel CHF 500k</span></div>
+        <div class="thermo-outer"><div class="thermo-inner" style="width:76%"><span class="thermo-pct-label">76%</span></div></div>
+      </div>
+      <ul class="investor-list">
+        <li class="inv-item"><div><div class="inv-name">Family Office A</div><div class="inv-detail">Jan. 2026</div></div><div class="inv-amount">CHF 100k</div></li>
+        <li class="inv-item"><div><div class="inv-name">Business Angel B</div><div class="inv-detail">Feb. 2026</div></div><div class="inv-amount">CHF 80k</div></li>
+        <li class="inv-item"><div><div class="inv-name">Business Angel C</div><div class="inv-detail">März 2026</div></div><div class="inv-amount">CHF 75k</div></li>
+        <li class="inv-item"><div><div class="inv-name">Angel Network D</div><div class="inv-detail">April 2026</div></div><div class="inv-amount">CHF 75k</div></li>
+        <li class="inv-item"><div><div class="inv-name">Business Angel E</div><div class="inv-detail">Mai 2026</div></div><div class="inv-amount">CHF 50k</div></li>
+      </ul>
+      <div style="font-size:11px;color:#ccc;margin-top:8px;padding-top:6px;border-top:1px solid #f0f0ee;">Namen anonymisiert – Demoversion</div>
+    </div>
+    <div class="card">
       <div class="card-label">Investor-Pipeline</div>
-      <div class="pipeline">
-        <div class="pipe-step"><div class="pn" style="color:#0F6E56">34</div><div class="pl">Identifiziert</div></div>
-        <div class="pipe-step"><div class="pn">18</div><div class="pl">Kontaktiert</div></div>
-        <div class="pipe-step"><div class="pn" style="color:#378ADD">12</div><div class="pl">Im Gespräch</div></div>
-        <div class="pipe-step"><div class="pn" style="color:#BA7517">5</div><div class="pl">Zugesagt</div></div>
-        <div class="pipe-step"><div class="pn" style="color:#0F6E56">3</div><div class="pl">Abgeschlossen</div></div>
+      <div class="pipe-tier">
+        <div class="pipe-tier-label tier-hot">🔥 Heisse Leads (&gt;75%)</div>
+        <div class="pipe-inv"><div><div class="pi-name">Investor #7</div><div class="pi-status">Term Sheet in Prüfung</div></div><span class="prob-badge prob-hot">85%</span></div>
+        <div class="pipe-inv"><div><div class="pi-name">Investor #4</div><div class="pi-status">Due Diligence läuft</div></div><span class="prob-badge prob-hot">78%</span></div>
+      </div>
+      <div class="pipe-tier">
+        <div class="pipe-tier-label tier-mid">⚡ Im Gespräch (50%)</div>
+        <div class="pipe-inv"><div><div class="pi-name">Investor #12</div><div class="pi-status">2. Meeting vereinbart</div></div><span class="prob-badge prob-mid">55%</span></div>
+        <div class="pipe-inv"><div><div class="pi-name">Investor #9</div><div class="pi-status">Feedback ausstehend</div></div><span class="prob-badge prob-mid">50%</span></div>
+      </div>
+      <div class="pipe-tier">
+        <div class="pipe-tier-label tier-cold">📬 Erstkontakt (25%)</div>
+        <div class="pipe-inv"><div><div class="pi-name">Investor #3</div><div class="pi-status">Intro-Call terminiert</div></div><span class="prob-badge prob-cold">30%</span></div>
+        <div class="pipe-inv"><div><div class="pi-name">Investor #15</div><div class="pi-status">One-Pager versendet</div></div><span class="prob-badge prob-cold">20%</span></div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-label">Kommunikations-Status</div>
-      <div class="metrics">
-        <div class="metric"><span class="val">14 Tage</span><div class="lbl">Letztes Update</div></div>
-        <div class="metric"><span class="val" style="color:#BA7517">3</span><div class="lbl">Investoren &gt;60 Tage ohne Kontakt</div></div>
-        <div class="metric"><span class="val">68%</span><div class="lbl">Öffnungsrate letztes Update</div></div>
-        <div class="metric"><span class="val" style="color:#534AB7">GV</span><div class="lbl">Nächstes Format: 12. Sept.</div></div>
+  </div>
+
+  <!-- BUSINESS KPIs -->
+  <div class="card">
+    <div class="biz-section-label">Business-Kennzahlen – HealthFlow AG (Stand Q1 2026)</div>
+    <div class="biz-grid-top">
+      <div class="biz-kpi"><div class="biz-val">CHF 148k</div><div class="biz-lbl">ARR (Jahresumsatz)</div><div class="biz-delta d-up">↑ +34% vs. Vorquartal</div></div>
+      <div class="biz-kpi"><div class="biz-val">CHF 12.3k</div><div class="biz-lbl">MRR (Monatsumsatz)</div><div class="biz-delta d-up">↑ +8% vs. Vormonat</div></div>
+      <div class="biz-kpi"><div class="biz-val">23</div><div class="biz-lbl">Aktive Kunden (Praxen)</div><div class="biz-delta d-up">↑ +5 neue Kunden</div></div>
+      <div class="biz-kpi"><div class="biz-val">0%</div><div class="biz-lbl">Churn-Rate</div><div class="biz-delta d-flat">Stabil (kein Abgang)</div></div>
+    </div>
+    <div class="biz-grid-bot">
+      <div class="biz-kpi"><div class="biz-val">CHF 4'200</div><div class="biz-lbl">CAC (Akquisekosten/Kd.)</div><div class="biz-delta d-flat">Stabil</div></div>
+      <div class="biz-kpi"><div class="biz-val">CHF 18'600</div><div class="biz-lbl">LTV (Kundenwert, 3J.)</div><div class="biz-delta d-up">↑ durch Vertragsver.</div></div>
+      <div class="biz-kpi"><div class="biz-val" style="color:#1D9E75">4.4×</div><div class="biz-lbl">LTV/CAC-Ratio</div><div class="biz-delta d-up">Ziel: &gt;3× ✓</div></div>
+      <div class="biz-kpi"><div class="biz-val">8.2</div><div class="biz-lbl">NPS (Kundenzufr.)</div><div class="biz-delta d-up">↑ +0.4 vs. Vorquartal</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:12px;border-top:1px solid #f0f0ee;">
+      <!-- MRR-Trend -->
+      <div>
+        <div class="card-label" style="margin-bottom:8px;">MRR-Trend (Jan–Jun 2026)</div>
+        <div class="chart-wrap">
+          <div class="chart-col"><div class="chart-v">7.2k</div><div class="chart-bar" style="height:59%;background:#C2DDF7;"></div><div class="chart-m">Jan</div></div>
+          <div class="chart-col"><div class="chart-v">8.4k</div><div class="chart-bar" style="height:68%;background:#A8CEFA;"></div><div class="chart-m">Feb</div></div>
+          <div class="chart-col"><div class="chart-v">9.7k</div><div class="chart-bar" style="height:79%;background:#7FB5F5;"></div><div class="chart-m">Mär</div></div>
+          <div class="chart-col"><div class="chart-v">10.8k</div><div class="chart-bar" style="height:88%;background:#548FE8;"></div><div class="chart-m">Apr</div></div>
+          <div class="chart-col"><div class="chart-v">11.6k</div><div class="chart-bar" style="height:94%;background:#378ADD;"></div><div class="chart-m">Mai</div></div>
+          <div class="chart-col"><div class="chart-v">12.3k</div><div class="chart-bar" style="height:100%;background:#1F4E79;"></div><div class="chart-m">Jun</div></div>
+        </div>
+      </div>
+      <!-- Financial KPIs -->
+      <div>
+        <div class="card-label" style="margin-bottom:8px;">Liquidität &amp; Runway</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="biz-kpi"><div class="biz-val">CHF 42k</div><div class="biz-lbl">Burn Rate / Monat</div><div class="biz-delta d-flat">Stabil</div></div>
+          <div class="biz-kpi"><div class="biz-val">CHF 588k</div><div class="biz-lbl">Cash-Position</div><div class="biz-delta d-flat">inkl. Seed-Restmittel</div></div>
+          <div class="biz-kpi"><div class="biz-val" style="color:#1D9E75">14 Mo.</div><div class="biz-lbl">Runway (bei aktuellem Burn)</div><div class="biz-delta d-flat">Steigt mit Series A</div></div>
+        </div>
       </div>
     </div>
+
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid #f0f0ee;">
+      <div class="card-label" style="margin-bottom:8px;">Kunden-Akquise-Pipeline (Sales)</div>
+      <div class="funnel-row">
+        <div class="funnel-step"><div class="funnel-n" style="color:#185FA5">45</div><div class="funnel-l">Leads</div></div>
+        <div class="funnel-step"><div class="funnel-n" style="color:#534AB7">12</div><div class="funnel-l">Trial/POC</div></div>
+        <div class="funnel-step"><div class="funnel-n" style="color:#BA7517">7</div><div class="funnel-l">Verhandlung</div></div>
+        <div class="funnel-step"><div class="funnel-n" style="color:#1D9E75">4</div><div class="funnel-l">Signed</div></div>
+        <div class="funnel-step"><div class="funnel-n" style="color:#0F6E56">23</div><div class="funnel-l">Aktiv ✓</div></div>
+      </div>
+      <p style="font-size:11px;color:#bbb;margin-top:6px;">Konversionsrate Lead→Aktiv: 51% · Ø Sales-Zyklus: 6 Wochen</p>
+    </div>
+  </div>
+
+  <!-- BLOCKER + TERMINE -->
+  <div class="blocker-row">
+    <div class="blocker-box">
+      <div class="blocker-title">🚨 Blocker / Decisions needed</div>
+      <div class="blocker-item"><span class="blocker-bullet">▶</span><span>Term Sheet Investor #4: Anwaltsprüfung ausstehend – Entscheidung bis 14.07.2026 nötig</span></div>
+      <div class="blocker-item"><span class="blocker-bullet">▶</span><span>Finanzplan 2026–2028: Update auf Q1-Actuals vor nächsten DD-Anfragen erforderlich</span></div>
+      <div class="blocker-item"><span class="blocker-bullet" style="color:#BA7517;">▶</span><span style="color:#BA7517;">Sales: 7 offene Verhandlungen brauchen Kapazität – CEO-Zeit knapp</span></div>
+    </div>
+    <div class="next-update-box">
+      <div class="next-update-title">Nächste Termine</div>
+      <div class="upd-event"><span>Anwalt – Term Sheet #4</span><span class="upd-date">14.07.2026</span></div>
+      <div class="upd-event"><span>Investoren-Call Q2</span><span class="upd-date">15.07.2026</span></div>
+      <div class="upd-event"><span>Investor-Update Q2</span><span class="upd-date">Aug. 2026</span></div>
+      <div class="upd-event"><span>Ordentliche GV · Zürich</span><span class="upd-date">12.09.2026</span></div>
+    </div>
+  </div>
+
+  <!-- DOCSEND + AUDIT -->
+  <div class="bottom-row">
     <div class="card">
       <div class="card-label">Datenraum-Analytics (Docsend)</div>
-      <div class="metrics">
+      <div class="metrics" style="grid-template-columns:repeat(4,1fr);">
         <div class="metric"><span class="val">8</span><div class="lbl">Aktive Leser</div></div>
         <div class="metric"><span class="val" style="color:#E24B4A">Slide 7</span><div class="lbl">Schwächste Seite</div></div>
-        <div class="metric"><span class="val">4:32</span><div class="lbl">Ø Lesezeit Pitch-Deck</div></div>
+        <div class="metric"><span class="val">4:32</span><div class="lbl">Ø Lesezeit Deck</div></div>
         <div class="metric"><span class="val" style="color:#1D9E75">Slide 3</span><div class="lbl">Meiste Zeit</div></div>
       </div>
     </div>
     <div class="card">
-      <div class="card-label">Zugriffsprotokoll Investor-Portal (Audit-Trail, Pitchly-Punkt 4)</div>
+      <div class="card-label">Zugriffsprotokoll – Audit-Trail</div>
       <table class="audit-table">
-        <tr><th>Datum</th><th>Investor</th><th>Aktion</th><th>Zugriffsstufe</th></tr>
-        <tr><td>09.07.2026, 14:32</td><td>Investor #7 (Business Angel)</td><td>Pitch Deck geöffnet, 6 Min. gelesen</td><td>Investor (NDA)</td></tr>
-        <tr><td>08.07.2026, 09:10</td><td>Investor #3 (Family Office)</td><td>Q1-Update gelesen</td><td>Investor (NDA)</td></tr>
-        <tr><td>05.07.2026, 17:45</td><td>Investor #11 (Angel Network) </td><td>One-Pager angesehen</td><td>Öffentlich</td></tr>
-        <tr><td>02.07.2026, 11:02</td><td>Investor #7 (Business Angel)</td><td>Finanzplan geöffnet, 3 Min. gelesen</td><td>Investor (NDA)</td></tr>
+        <tr><th>Datum</th><th>Investor</th><th>Aktion</th><th>Stufe</th></tr>
+        <tr><td>09.07.2026</td><td>Investor #7</td><td>Pitch Deck, 6 Min.</td><td>NDA</td></tr>
+        <tr><td>08.07.2026</td><td>Investor #3</td><td>Q1-Update gelesen</td><td>NDA</td></tr>
+        <tr><td>05.07.2026</td><td>Investor #15</td><td>One-Pager angesehen</td><td>Öffentlich</td></tr>
+        <tr><td>02.07.2026</td><td>Investor #7</td><td>Finanzplan, 3 Min.</td><td>NDA</td></tr>
       </table>
-      <p style="font-size:11px;color:#999;margin-top:8px;">Ermöglicht dem Gründerteam nachzuvollziehen, wer sich vertieft mit welchen Unterlagen befasst – Grundlage für gezielte Follow-ups (vgl. KIGIR-Framework, Phase 3).</p>
     </div>
   </div>
 
-  <!-- INVESTOR VIEW -->
-  <div id="view-investor" class="view">
-
-    <div class="access-selector">
-      <button class="access-btn active" id="acc-public" onclick="setAccess('public')">Öffentlich</button>
-      <button class="access-btn" id="acc-contact" onclick="setAccess('contact')">Nach Erstkontakt</button>
-      <button class="access-btn" id="acc-nda" onclick="setAccess('nda')">Investor (NDA)</button>
+  <!-- MARKT-INTELLIGENCE -->
+  <div class="card">
+    <div class="ci-header-row">
+      <div class="card-label" style="margin-bottom:0;">Markt-Intelligence – Täglicher KI-Scan (Wettbewerb &amp; Regulierung)</div>
+      <div class="ci-scan-status">🟢 Letzter Scan: heute 03:45 Uhr</div>
     </div>
-    <p class="access-explain" id="access-explain-text">Stufe «Öffentlich»: sichtbar für alle, die den One-Pager-Link erhalten – z.B. bei Kaltakquise über eine Plattform (Pitchly-Punkt 1, gestaffelte Pre-Access-Zugriffsebenen, vgl. KIGIR-Framework Phase 1).</p>
-
-    <div class="portal-header">
-      <div>
-        <div class="portal-logo">HealthFlow AG – Investor-Portal</div>
-        <div class="portal-meta">Letzte Aktualisierung: 10.06.2026 <span class="access-badge" id="access-status-badge">Öffentlicher Zugang</span></div>
+    <div class="ci-grid">
+      <div class="ci-card">
+        <div class="ci-meta">
+          <div class="ci-badges"><span class="ci-source">eHealth Suisse</span><span class="ci-cat cat-reg">Regulierung</span></div>
+          <span class="ci-date">07.06.2026</span>
+        </div>
+        <div class="ci-title">Bundesrat bestätigt EPD-Pflicht ab 2027 – alle Praxen betroffen</div>
+        <div class="ci-desc">Die eHealth-Strategie 2027 schreibt interoperable digitale Patientendossiers für alle Arztpraxen vor – direkter Rückenwind für Plattformlösungen wie HealthFlow AG.</div>
+        <div class="ci-rel-row"><span class="ci-rel-label">Relevanz</span><div class="ci-rel-bar-outer"><div class="ci-rel-bar-inner" style="width:94%;background:#1D9E75;"></div></div><span class="ci-rel-pct">94%</span></div>
+      </div>
+      <div class="ci-card">
+        <div class="ci-meta">
+          <div class="ci-badges"><span class="ci-source">TechCrunch</span><span class="ci-cat cat-fin">Finanzierung</span></div>
+          <span class="ci-date">10.06.2026</span>
+        </div>
+        <div class="ci-title">Mediteo schliesst Seed-Runde über CHF 3.2 Mio. ab</div>
+        <div class="ci-desc">Das Zürcher Digital-Health-Startup sichert Wachstumskapital für Medikamenten-Management. Mediteo adressiert ein anderes Segment – kein direkter Wettbewerb, aber gleicher Investoren-Pool.</div>
+        <div class="ci-rel-row"><span class="ci-rel-label">Relevanz</span><div class="ci-rel-bar-outer"><div class="ci-rel-bar-inner" style="width:89%;background:#E24B4A;"></div></div><span class="ci-rel-pct">89%</span></div>
+      </div>
+      <div class="ci-card">
+        <div class="ci-meta">
+          <div class="ci-badges"><span class="ci-source">Kisim Blog</span><span class="ci-cat cat-prod">Produkt</span></div>
+          <span class="ci-date">05.06.2026</span>
+        </div>
+        <div class="ci-title">Kisim lanciert KI-Dokumentenmanagement für Arztpraxen</div>
+        <div class="ci-desc">Neues Modul automatisiert Kodierung von Arztberichten und rückt in den Bereich der Dateneingabe-Automatisierung – mögliche Überschneidung mit HealthFlow-Datenschnittstelle.</div>
+        <div class="ci-rel-row"><span class="ci-rel-label">Relevanz</span><div class="ci-rel-bar-outer"><div class="ci-rel-bar-inner" style="width:76%;background:#378ADD;"></div></div><span class="ci-rel-pct">76%</span></div>
+      </div>
+      <div class="ci-card">
+        <div class="ci-meta">
+          <div class="ci-badges"><span class="ci-source">LinkedIn</span><span class="ci-cat cat-par">Partnerschaft</span></div>
+          <span class="ci-date">03.06.2026</span>
+        </div>
+        <div class="ci-title">Doctorly &amp; Bexio kooperieren für Praxismanagement-Integration</div>
+        <div class="ci-desc">Verbindung von Praxissoftware und Buchhaltung signalisiert wachsendes Integrations-Ökosystem – relevant für HealthFlows EHR-Strategie und potenzielle Partnerschaftsgespräche.</div>
+        <div class="ci-rel-row"><span class="ci-rel-label">Relevanz</span><div class="ci-rel-bar-outer"><div class="ci-rel-bar-inner" style="width:71%;background:#BA7517;"></div></div><span class="ci-rel-pct">71%</span></div>
       </div>
     </div>
+    <div class="ci-note">KI-Scan läuft täglich automatisch · Quellen: eHealth-Suisse, TechCrunch, LinkedIn, Branchen-Newsletter · Relevanz-Score bezogen auf HealthFlow AG Wettbewerbs- und Marktkontext · Unterstützt Q&amp;A-Vorbereitung für Investor-Gespräche (KIGIR-Framework, Phase 3)</div>
+  </div>
 
-    <!-- PUBLIC: always visible -->
-    <div class="card">
-      <div class="card-label">Kurzübersicht (One-Pager)</div>
-      <p style="font-size:13px;color:#444;line-height:1.6;">HealthFlow AG entwickelt eine digitale Plattform für strukturiertes Patienten-Monitoring im ambulanten Bereich. Frühphasen-Startup (Seed, gegründet 2024), 4 Teammitglieder, erste zahlende Kunden seit März 2026. Aktuell läuft die Series-A-Finanzierung mit einem Ziel von CHF 500'000 bei Privatinvestoren und semi-institutionellen Investoren.</p>
-    </div>
-
-    <!-- CONTACT LEVEL -->
-    <div class="gated" data-level="contact">
-      <div class="gate-content">
-        <div class="card">
-          <div class="card-label">Eckdaten (nach Erstkontakt sichtbar)</div>
-          <div class="kpi-grid">
-            <div class="kpi-card">
-              <div class="kpi-val">CHF 148k</div>
-              <div class="kpi-lbl">ARR (Jahresumsatz)</div>
-              <div class="kpi-delta delta-up">↑ +34% vs. Vorquartal</div>
+  <!-- DIREKTER DIALOG (Management-Ansicht) -->
+  <div class="card">
+    <div class="card-label">Direkter Dialog – Management ↔ Investoren</div>
+    <div class="dialog-outer">
+      <div class="dialog-tab-row">
+        <button class="d-tab active" onclick="switchMgmtDTab('konv', this)">💬 Konversationen <span style="background:#E24B4A;color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:4px;">2</span></button>
+        <button class="d-tab" onclick="switchMgmtDTab('broad', this)">📢 Broadcast</button>
+      </div>
+      <div id="mgmt-konv">
+        <div style="display:flex;border-bottom:1px solid #ddd;">
+          <div style="width:190px;border-right:1px solid #f0f0ee;font-size:12px;padding:8px 0;overflow-y:auto;max-height:220px;flex-shrink:0;">
+            <div style="padding:8px 12px;background:#E6F1FB;border-left:3px solid #378ADD;cursor:pointer;">
+              <div style="font-weight:700;color:#0C447C;">Urs Frei</div>
+              <div style="color:#888;font-size:11px;margin-top:2px;">Besten Dank! Das macht Sinn.</div>
             </div>
-            <div class="kpi-card">
-              <div class="kpi-val">76%</div>
-              <div class="kpi-lbl">Fundraising-Ziel erreicht</div>
-              <div class="kpi-delta" style="color:#378ADD">CHF 380k von CHF 500k</div>
+            <div style="padding:8px 12px;border-left:3px solid #E24B4A;cursor:pointer;">
+              <div style="font-weight:700;color:#333;">Sandra Lüthi <span style="background:#E24B4A;color:#fff;font-size:10px;padding:1px 5px;border-radius:8px;">!</span></div>
+              <div style="color:#888;font-size:11px;margin-top:2px;">Und plant ihr ein Lead-Investor-Modell?</div>
             </div>
-            <div class="kpi-card">
-              <div class="kpi-val">14 Mo.</div>
-              <div class="kpi-lbl">Runway</div>
-              <div class="kpi-delta delta-flat">Stabil</div>
+          </div>
+          <div style="flex:1;">
+            <div class="dialog-body">
+              <div class="msg-row">
+                <div class="msg-sender">Urs Frei</div>
+                <div class="tag-wichtig">🔔 Wichtig</div>
+                <div class="msg-bubble msg-in">Guten Tag, ich hätte eine Frage zur aktuellen Burn Rate. Wie berechnet sich diese genau?</div>
+                <div class="msg-time">14:22 · 09.06.2026</div>
+              </div>
+              <div class="msg-row msg-out-row">
+                <div class="msg-sender-right">Sarah Dupont (Management)</div>
+                <div class="msg-bubble msg-out">Die Burn Rate von CHF 42k/Monat umfasst alle operativen Kosten inkl. laufendem CAPEX (~8%). Der Cash-Bestand von CHF 588k ergibt 14 Monate Runway.</div>
+                <div class="msg-time-right">16:05 · 09.06.2026</div>
+              </div>
+              <div class="msg-row">
+                <div class="msg-sender">Urs Frei</div>
+                <div class="msg-bubble msg-in">Besten Dank für die schnelle Klärung. Das macht Sinn.</div>
+                <div class="msg-time">08:44 · 10.06.2026</div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="card">
-          <div class="card-label">Meilensteine &amp; Roadmap</div>
-          <ul class="milestone-list">
-            <li><div class="ms-dot ms-done"></div><div class="ms-text">Produktlaunch v1.0 – erstes zahlungspflichtiges Kundensegment</div><div class="ms-date">März 2026 ✓</div></li>
-            <li><div class="ms-dot ms-done"></div><div class="ms-text">Seed-Runde abgeschlossen (CHF 250k)</div><div class="ms-date">Jan. 2026 ✓</div></li>
-            <li><div class="ms-dot ms-active"></div><div class="ms-text">Series A Fundraising – Ziel CHF 500k, aktuell CHF 380k zugesagt</div><div class="ms-date">laufend</div></li>
-            <li><div class="ms-dot ms-active"></div><div class="ms-text">Expansion Deutschschweiz – 3 neue Enterprise-Kunden in Pipeline</div><div class="ms-date">Q2–Q3 2026</div></li>
-            <li><div class="ms-dot ms-next"></div><div class="ms-text">Produktlaunch v2.0 – KI-gestützte Automatisierungsfunktionen</div><div class="ms-date">Q4 2026 geplant</div></li>
-            <li><div class="ms-dot ms-next"></div><div class="ms-text">Markteintritt Österreich &amp; Deutschland</div><div class="ms-date">2027 geplant</div></li>
-          </ul>
+        <div class="dialog-input-row">
+          <input class="dialog-input-field" type="text" placeholder="Antwort an Urs Frei schreiben..." onclick="showMgmtDialogDemo()">
+          <button class="dialog-send-btn" onclick="showMgmtDialogDemo()">Senden</button>
         </div>
-        <div class="card">
-          <div class="card-label">Nächste Termine &amp; Events</div>
-          <div class="metrics" style="grid-template-columns:repeat(3,1fr);">
-            <div class="metric"><span class="val" style="font-size:15px;color:#534AB7">12.09.2026</span><div class="lbl">Ordentliche GV · Zürich</div></div>
-            <div class="metric"><span class="val" style="font-size:15px;color:#378ADD">Aug. 2026</span><div class="lbl">Investor-Informationsanlass</div></div>
-            <div class="metric"><span class="val" style="font-size:15px;color:#1D9E75">Okt. 2026</span><div class="lbl">Q3 Investor-Update</div></div>
+        <div class="dialog-demo-note" id="mgmt-dialog-demo-msg">✓ Demo: In der Live-Version wird die Antwort direkt an den Investor übermittelt.</div>
+      </div>
+      <div id="mgmt-broad" style="display:none;">
+        <div class="dialog-body">
+          <div class="broadcast-item">
+            <div class="broadcast-title">⚠️ WICHTIG: Abschluss Series A – nächste Schritte</div>
+            <div class="broadcast-text">Liebe Investorinnen und Investoren, der Abschluss der Series A ist für Ende Juli 2026 geplant. Noch nicht unterzeichnete Term Sheets bitte bis 20.07.2026 zurücksenden.</div>
+            <div class="broadcast-date">09.06.2026 · An alle Investoren gesendet</div>
+          </div>
+        </div>
+        <div class="dialog-input-row">
+          <input class="dialog-input-field" type="text" placeholder="Broadcast an alle Investoren verfassen..." onclick="showMgmtDialogDemo()">
+          <button class="dialog-send-btn" onclick="showMgmtDialogDemo()">An alle senden</button>
+        </div>
+        <div class="dialog-demo-note" id="mgmt-dialog-demo-msg2">✓ Demo: In der Live-Version wird der Broadcast an alle verifizierten Investoren gesendet.</div>
+      </div>
+    </div>
+    <p style="font-size:11px;color:#bbb;margin-top:8px;">Alle Konversationen werden archiviert · Sandra Lüthi (2. offene Konversation) wartet auf Antwort</p>
+  </div>
+
+</div><!-- END FOUNDER VIEW -->
+
+<!-- ═══════════════════════════════════════════════════════════
+     INVESTOR VIEW
+═══════════════════════════════════════════════════════════ -->
+<div id="view-investor" class="view">
+
+  <div class="access-selector">
+    <button class="access-btn active" id="acc-public" onclick="setAccess('public')">🔍 Pot. Investor</button>
+    <button class="access-btn" id="acc-contact" onclick="setAccess('contact')">📧 Pot. Inv. / Kontakt</button>
+    <button class="access-btn" id="acc-nda" onclick="setAccess('nda')">🔏 Pot. Inv. / NDA</button>
+    <button class="access-btn" id="acc-shareholder" onclick="setAccess('shareholder')">🏦 Investor</button>
+  </div>
+  <p class="access-explain" id="access-explain-text">Stufe «Öffentlich»: Das Schaufenster – frei zugänglich, kein Login erforderlich. Ziel: Aufmerksamkeit generieren, Relevanz prüfen, zur Kontaktaufnahme animieren.</p>
+
+  <div class="portal-header">
+    <div>
+      <div class="portal-logo">HealthFlow AG – Investor-Portal</div>
+      <div class="portal-meta">Letzte Aktualisierung: 10.06.2026 <span class="access-badge" id="access-status-badge">Öffentlicher Zugang</span></div>
+    </div>
+  </div>
+
+  <!-- ── PUBLIC: immer sichtbar ── -->
+  <div class="card hero-card">
+    <div class="hero-badge">Digital Health · Series A · Schweiz · CHF 500k</div>
+    <div class="hero-headline">Ambulante Patientenbetreuung digitalisieren – einfach, sicher, skalierbar</div>
+    <div class="hero-sub">HealthFlow AG verbindet Arztpraxen und Patienten auf einer digitalen Monitoring-Plattform. Automatisierte Datenerfassung statt Papierprozesse – 23 Praxen in der Schweiz vertrauen uns bereits.</div>
+  </div>
+
+  <div class="prob-sol-grid">
+    <div class="prob-card">
+      <div class="card-label" style="color:#a53030;">🔴 Das Problem</div>
+      <div class="ps-headline">Ambulante Nachsorge ist fragmentiert und ineffizient</div>
+      <ul class="ps-list">
+        <li>Praxen arbeiten mit Papier und Silolösungen ohne Verbindung zum Patienten</li>
+        <li>Monitoring-Daten werden manuell erfasst – fehleranfällig und zeitaufwendig</li>
+        <li>Ärzte verbringen bis zu 30% ihrer Zeit mit Verwaltung statt Medizin</li>
+      </ul>
+    </div>
+    <div class="sol-card">
+      <div class="card-label" style="color:#0F6E56;">🟢 Unsere Lösung</div>
+      <div class="ps-headline">Eine Plattform, die Praxen und Patienten verbindet</div>
+      <ul class="ps-list">
+        <li>Automatisierte Erfassung von Monitoring-Daten über App und Wearables</li>
+        <li>Echtzeit-Daten direkt in bestehende Praxissoftware integrierbar</li>
+        <li>CH-DSGVO-konform, OWASP-zertifiziert, Swiss Cloud Hosting</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Marktgrösse &amp; Erste Traktion</div>
+    <div class="tam-grid">
+      <div class="tam-item"><div class="tam-val">CHF 28 Mrd.</div><div class="tam-lbl">DACH Digital-Health-Markt (TAM)</div></div>
+      <div class="tam-item"><div class="tam-val">CHF 2.4 Mrd.</div><div class="tam-lbl">Schweizer Markt (SAM)</div></div>
+      <div class="tam-item"><div class="tam-val">23</div><div class="tam-lbl">Zahlende Kunden · 0% Churn</div></div>
+      <div class="tam-item"><div class="tam-val">8.2 NPS</div><div class="tam-lbl">Kundenzufriedenheit (Skala 0–10)</div></div>
+    </div>
+    <div class="cta-wrapper" id="public-cta-wrapper">
+      <button class="cta-btn" onclick="showCTA()">Investoren-Zugang anfordern – One-Pager freischalten →</button>
+      <div class="cta-demo-msg" id="cta-demo-msg">✓ Demo: In der Live-Version wird hier eine E-Mail-Anfrage ausgelöst. Zugang innerhalb von 24h nach Investor-Prüfung.</div>
+    </div>
+  </div>
+
+  <!-- ── CONTACT: nach Erstkontakt ── -->
+  <div class="gated" data-level="contact">
+    <div class="gate-content">
+      <div class="card">
+        <div class="card-label">Digitaler One-Pager – HealthFlow AG</div>
+        <div class="op-grid">
+          <div class="op-section"><div class="op-title">Mission</div><div class="op-text">Ambulante Patientenbetreuung in der Schweiz digitalisieren – als führende SaaS-Plattform für Arztpraxen bis 2028.</div></div>
+          <div class="op-section"><div class="op-title">Produkt &amp; Preismodell</div><div class="op-text">Web-App + Patient-App + EHR-Integration. Monatliches Abo: CHF 520 pro Praxis und Monat (ca. CHF 6'240/Jahr pro Kunde).</div></div>
+          <div class="op-section"><div class="op-title">Markt &amp; Potenzial</div><div class="op-text">6'200 Arztpraxen in der Schweiz, Kernsegment ~3'000. Bei 15% Marktdurchdringung = CHF 28M ARR-Potenzial in CH allein.</div></div>
+          <div class="op-section"><div class="op-title">Wettbewerb</div><div class="op-text">Hauptalternative: Papier und fragmentierte EHR-Tools. Kein direkter Konkurrent mit gleichem Fokus auf ambulantes Monitoring in der Schweiz.</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Team</div>
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-avatar">SD</div>
+            <div class="team-name">Sarah Dupont</div>
+            <div class="team-role">CEO &amp; Co-Gründerin</div>
+            <div class="team-bio">7J. McKinsey Health Practice, MBA Universität St.Gallen, frühere Ärztin (FMH Innere Medizin)</div>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">MK</div>
+            <div class="team-name">Marc Keller</div>
+            <div class="team-role">CTO &amp; Co-Gründer</div>
+            <div class="team-bio">Ex-Google Engineer Zürich, 10J. Healthtech (Berlin/Zürich), MSc ETH Informatik, 2 Exits</div>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">LV</div>
+            <div class="team-name">Laura Vogel</div>
+            <div class="team-role">Head of Sales</div>
+            <div class="team-bio">8J. MedTech Sales (Roche, Sonova), Aufbau von 50+ Praxis-Kundenbeziehungen im DACH-Raum</div>
           </div>
         </div>
       </div>
-      <div class="gate-lock"><span class="lock-icon">🔒</span>Verfügbar ab Stufe «Nach Erstkontakt»: Eckdaten, Meilensteine, nächste Termine.</div>
+
+      <div class="card">
+        <div class="card-label">Umsatz-Roadmap 2025–2028 (ARR)</div>
+        <div class="roadmap-chart">
+          <div class="rd-col"><div class="rd-val">CHF 65k</div><div class="rd-bar" style="height:6%;background:#C2DDF7;"></div><div class="rd-yr">2025</div></div>
+          <div class="rd-col"><div class="rd-val">CHF 180k</div><div class="rd-bar" style="height:16%;background:#7FB5F5;"></div><div class="rd-yr">2026E</div></div>
+          <div class="rd-col"><div class="rd-val">CHF 480k</div><div class="rd-bar" style="height:44%;background:#378ADD;"></div><div class="rd-yr">2027E</div></div>
+          <div class="rd-col"><div class="rd-val">CHF 1.1M</div><div class="rd-bar" style="height:100%;background:#1F4E79;"></div><div class="rd-yr">2028E</div></div>
+        </div>
+        <div class="rd-note">Annahme: 15% Marktdurchdringung Kernsegment bis 2028 · Kein Ausland</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Investment-Zusammenfassung &amp; Mittelverwendung</div>
+        <div class="biz-grid-top" style="margin-bottom:14px;">
+          <div class="biz-kpi"><div class="biz-val">CHF 500k</div><div class="biz-lbl">Gesamtsumme Series A</div></div>
+          <div class="biz-kpi"><div class="biz-val">CHF 10k–100k</div><div class="biz-lbl">Ticket-Grössen</div></div>
+          <div class="biz-kpi"><div class="biz-val">CHF 2.0M</div><div class="biz-lbl">Pre-Money Bewertung</div></div>
+          <div class="biz-kpi"><div class="biz-val">20%</div><div class="biz-lbl">Verwässerung Series A</div></div>
+        </div>
+        <div class="card-label">Mittelverwendung</div>
+        <div class="funds-grid">
+          <div class="fund-item"><div class="fund-bar-outer"><div class="fund-bar-inner" style="width:50%;background:#1F4E79;"></div></div><div class="fund-pct">50%</div><div class="fund-lbl">Produkt &amp; Technik</div><div style="font-size:11px;color:#aaa;">CHF 250k</div></div>
+          <div class="fund-item"><div class="fund-bar-outer"><div class="fund-bar-inner" style="width:30%;background:#378ADD;"></div></div><div class="fund-pct">30%</div><div class="fund-lbl">Sales &amp; Marketing</div><div style="font-size:11px;color:#aaa;">CHF 150k</div></div>
+          <div class="fund-item"><div class="fund-bar-outer"><div class="fund-bar-inner" style="width:20%;background:#7FB5F5;"></div></div><div class="fund-pct">20%</div><div class="fund-lbl">Operations &amp; Infrastr.</div><div style="font-size:11px;color:#aaa;">CHF 100k</div></div>
+        </div>
+      </div>
+
+      <div class="nda-cta-box" id="nda-cta-wrapper">
+        <div class="nda-cta-title">🔐 Vollständigen Datenraum freischalten</div>
+        <div class="nda-cta-sub">Nach NDA-Unterzeichnung erhalten Sie Zugang zu allen KPIs, dem vollständigen Finanzmodell, der Cap Table und dem strukturierten Dokumenten-Tresor.</div>
+        <button class="nda-btn" onclick="showNDACTA()">NDA digital unterzeichnen &amp; Datenraum anfordern</button>
+        <div class="nda-demo-msg" id="nda-demo-msg">✓ Demo: In der Live-Version würde hier ein DocuSign/Adobe-Sign-Prozess gestartet.</div>
+      </div>
     </div>
+    <div class="gate-lock"><span class="lock-icon">🔒</span>Verfügbar ab Stufe «Nach Erstkontakt»: One-Pager, Team, Umsatz-Roadmap, Investment-Zusammenfassung.</div>
+  </div>
 
-    <!-- NDA LEVEL -->
-    <div class="gated" data-level="nda">
-      <div class="gate-content">
+  <!-- ── NDA: Vollzugriff ── -->
+  <div class="gated" data-level="nda">
+    <div class="gate-content">
 
-        <div class="card">
-          <div class="card-label">Alle Kennzahlen (Q1 2026) – mit KI-Interpretationsfunktion (Pitchly-Punkt 5)</div>
-          <div class="kpi-grid">
-            <div class="kpi-card">
-              <div class="kpi-val">CHF 148k</div>
-              <div class="kpi-lbl">ARR (Jahresumsatz)</div>
-              <div class="kpi-delta delta-up">↑ +34% vs. Vorquartal</div>
-              <span class="kpi-explain-btn" onclick="toggleExplain('exp1')">ℹ️ Erklärung</span>
-              <div class="kpi-explain-text" id="exp1">Der Anstieg von 34% bestätigt, dass das im März lancierte Produkt v1.0 zahlende Kunden gewinnt – kein einmaliger Ausschlag, sondern ein Trend über zwei Quartale.</div>
+      <div class="card">
+        <div class="card-label">Alle Kennzahlen (Q1 2026) </div>
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="kpi-val">CHF 148k</div><div class="kpi-lbl">ARR</div><div class="kpi-delta delta-up">↑ +34%</div><span class="kpi-explain-btn" onclick="toggleExplain('ex1')">ℹ️ Erklärung</span><div class="kpi-explain-text" id="ex1">Anstieg von 34% über zwei Quartale – kein Ausreisser, sondern bestätiger Trend nach Produktlaunch März 2026.</div></div>
+          <div class="kpi-card"><div class="kpi-val">23</div><div class="kpi-lbl">Aktive Kunden</div><div class="kpi-delta delta-up">↑ +5</div><span class="kpi-explain-btn" onclick="toggleExplain('ex2')">ℹ️ Erklärung</span><div class="kpi-explain-text" id="ex2">Netto-Zuwachs von 5 bei 0 Abgängen – frühes positives Signal für Product-Market-Fit.</div></div>
+          <div class="kpi-card"><div class="kpi-val">CHF 42k</div><div class="kpi-lbl">Burn Rate/Mo.</div><div class="kpi-delta delta-flat">Stabil</div><span class="kpi-explain-btn" onclick="toggleExplain('ex3')">ℹ️ Erklärung</span><div class="kpi-explain-text" id="ex3">CHF 42'000/Monat entspricht bei aktuellem Kontostand 14 Monaten Runway – ausreichend für Series-A-Abschluss ohne Zeitdruck.</div></div>
+          <div class="kpi-card"><div class="kpi-val">4.4×</div><div class="kpi-lbl">LTV/CAC-Ratio</div><div class="kpi-delta delta-up">↑ Ziel: &gt;3×</div><span class="kpi-explain-btn" onclick="toggleExplain('ex4')">ℹ️ Erklärung</span><div class="kpi-explain-text" id="ex4">4.4× bedeutet: jeder investierte Franken in Kundenakquise generiert CHF 4.40 Kundenwert – starkes Zeichen für ein skalierbares Modell.</div></div>
+          <div class="kpi-card"><div class="kpi-val">14 Mo.</div><div class="kpi-lbl">Runway</div><div class="kpi-delta delta-flat">Stabil</div><span class="kpi-explain-btn" onclick="toggleExplain('ex5')">ℹ️ Erklärung</span><div class="kpi-explain-text" id="ex5">Ohne Series-A-Mittel eingerechnet. Bei Abschluss der Runde verlängert sich der Runway voraussichtlich auf 20+ Monate.</div></div>
+          <div class="kpi-card"><div class="kpi-val">8.2</div><div class="kpi-lbl">NPS</div><div class="kpi-delta delta-up">↑ +0.4</div><span class="kpi-explain-btn" onclick="toggleExplain('ex6')">ℹ️ Erklärung</span><div class="kpi-explain-text" id="ex6">Werte über 8 gelten in B2B-SaaS als starkes Signal für aktive Weiterempfehlung durch bestehende Kunden.</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Cap Table – Gesellschafterstruktur (post-Seed, pre-Series A)</div>
+        <ul class="cap-list">
+          <li class="cap-item"><div class="cap-lbl">Gründerteam</div><div class="cap-bar-outer"><div class="cap-bar-inner" style="width:76%;background:#1F4E79;"></div></div><div class="cap-pct">76%</div></li>
+          <li class="cap-item"><div class="cap-lbl">Seed-Investoren</div><div class="cap-bar-outer"><div class="cap-bar-inner" style="width:19%;background:#378ADD;"></div></div><div class="cap-pct">19%</div></li>
+          <li class="cap-item"><div class="cap-lbl">ESOP Pool (Mitarb.)</div><div class="cap-bar-outer"><div class="cap-bar-inner" style="width:5%;background:#7FB5F5;"></div></div><div class="cap-pct">5%</div></li>
+        </ul>
+        <div class="cap-note">Nach Series A (CHF 500k @ CHF 2M pre-money = 20% Verwässerung): Gründerteam ~61% · Seed-Investoren ~15% · Series-A-Investoren 20% · ESOP ~4%</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Co-Investor-Pipeline – aktuell laufend (FOMO-Übersicht)</div>
+        <div class="fomo-grid">
+          <div class="fomo-card"><div class="fomo-val" style="color:#1D9E75">CHF 380k</div><div class="fomo-lbl">Bereits zugesagt (5 Investoren)</div></div>
+          <div class="fomo-card"><div class="fomo-val" style="color:#BA7517">CHF 120k</div><div class="fomo-lbl">In aktiver Verhandlung (2 Tickets)</div></div>
+          <div class="fomo-card"><div class="fomo-val" style="color:#185FA5">CHF 0</div><div class="fomo-lbl">Noch offenes Volumen</div></div>
+        </div>
+        <div class="pipe-tier" style="margin-top:10px;">
+          <div class="pipe-tier-label tier-hot">🔥 Term Sheet / Due Diligence</div>
+          <div class="pipe-inv"><div><div class="pi-name">Family Office Zürich</div><div class="pi-status">CHF 75k · Term Sheet zur Unterzeichnung bereit</div></div><span class="prob-badge prob-hot">85%</span></div>
+          <div class="pipe-inv"><div><div class="pi-name">Business Angel, MedTech-Fokus</div><div class="pi-status">CHF 45k · Due Diligence in Woche 2</div></div><span class="prob-badge prob-hot">78%</span></div>
+        </div>
+        <div class="pipe-tier">
+          <div class="pipe-tier-label tier-mid">⚡ Aktive Gespräche</div>
+          <div class="pipe-inv"><div><div class="pi-name">Angel Network Ostschweiz</div><div class="pi-status">CHF 50k · 2. Meeting vereinbart</div></div><span class="prob-badge prob-mid">55%</span></div>
+          <div class="pipe-inv"><div><div class="pi-name">Family Office Basel</div><div class="pi-status">CHF 30k · Pitch gehalten, Feedback ausstehend</div></div><span class="prob-badge prob-mid">50%</span></div>
+        </div>
+        <p style="font-size:11.5px;color:#999;margin-top:10px;font-style:italic;">Die Runde schliesst sich rasch. Koordinationstermin für verbleibende Interessenten: 25.07.2026.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Dokumenten-Tresor</div>
+        <div class="vault-grid">
+          <div class="vault-folder">
+            <div class="vault-folder-title">📁 Gesellschaftsrecht</div>
+            <div class="vault-file">Gesellschaftsstatuten HealthFlow AG (2024)</div>
+            <div class="vault-file">Aktionärsregister (aktuell)</div>
+            <div class="vault-file">GV-Protokoll 2025</div>
+          </div>
+          <div class="vault-folder">
+            <div class="vault-folder-title">📁 Finanzunterlagen</div>
+            <div class="vault-file">Finanzplan 2026–2028 (Excel)</div>
+            <div class="vault-file">Q1 2026 Managementbericht</div>
+            <div class="vault-file">Seed-Beteiligungsvertrag (anonymisiert)</div>
+          </div>
+          <div class="vault-folder">
+            <div class="vault-folder-title">📁 Produkt &amp; IP</div>
+            <div class="vault-file">Patentanmeldung Monitoring-Verfahren (in Bearb.)</div>
+            <div class="vault-file">Software-Architektur-Übersicht</div>
+            <div class="vault-file">Datenschutzkonzept CH-DSGVO</div>
+          </div>
+          <div class="vault-folder">
+            <div class="vault-folder-title">📁 Kunden &amp; Traction</div>
+            <div class="vault-file">Kundenliste mit LOIs (anonymisiert)</div>
+            <div class="vault-file">Case Study: Arztpraxis Winterthur</div>
+            <div class="vault-file">NPS-Auswertung Q1 2026</div>
+          </div>
+        </div>
+        <p style="font-size:11px;color:#bbb;margin-top:10px;">Zugriffe werden protokolliert (Audit-Trail). Download nur nach expliziter Freigabe.</p>
+      </div>
+
+      <!-- 1. INVESTOREN-UPDATES & MARKT-NEWS (zusammengeführt) -->
+      <div class="card">
+        <div class="card-label">Investoren-Updates &amp; Markt-News</div>
+        <div class="news-tab-row">
+          <button class="n-tab active" onclick="switchInvNews('upd', this)">📢 Updates</button>
+          <button class="n-tab" onclick="switchInvNews('arch', this)">📁 Archiv</button>
+          <button class="n-tab" onclick="switchInvNews('mkt', this)">🔍 Markt-News</button>
+        </div>
+        <div id="inv-upd">
+          <div class="news-item">
+            <div class="news-date">10.04.2026</div>
+            <div class="news-title">Series A: CHF 380k zugesagt – Runde läuft planmässig</div>
+            <div class="news-text">Fünf Investorinnen und Investoren haben ihre Beteiligung bestätigt. Ziel CHF 500k @ CHF 2.0 Mio. pre-money – aktuell 76% erreicht.</div>
+          </div>
+          <div class="news-item">
+            <div class="news-date">02.04.2026</div>
+            <div class="news-title">23. Kundin gewonnen – erster Enterprise-Deal Westschweiz</div>
+            <div class="news-text">Gruppenpraxis Lausanne (4 Ärzte) onboarded. Vertragsvolumen CHF 22k/Jahr, Potenzial für Expansion in die Romandie.</div>
+          </div>
+          <div class="news-item">
+            <div class="news-date">15.03.2026</div>
+            <div class="news-title">Pilotprojekt mit Kantonsspital Winterthur gestartet</div>
+            <div class="news-text">Dreimonatiger Pilot im ambulanten Bereich. Bei Erfolg: Potenzial für 8+ Abteilungen.</div>
+          </div>
+        </div>
+        <div id="inv-arch" style="display:none;">
+          <div class="update-item"><div class="update-title">Q1 2026 Update – Starkes Wachstum, Series A läuft</div><div class="update-meta">10.04.2026 · PDF verfügbar</div></div>
+          <div class="update-item"><div class="update-title">Q4 2025 Update – Produktlaunch &amp; erste Kunden</div><div class="update-meta">15.01.2026 · PDF verfügbar</div></div>
+          <div class="update-item"><div class="update-title">Meilenstein-Update: Seed-Runde abgeschlossen</div><div class="update-meta">20.01.2026 · Kurzinfo</div></div>
+          <div class="update-item"><div class="update-title">Q3 2025 Update – Pilotphase &amp; erstes Feedback</div><div class="update-meta">08.10.2025 · PDF verfügbar</div></div>
+        </div>
+        <div id="inv-mkt" style="display:none;">
+          <div class="news-item" style="border-left-color:#1D9E75;">
+            <div class="news-date">07.06.2026 · eHealth Suisse</div>
+            <div class="news-title">EPD-Pflicht ab 2027 bestätigt – Rückenwind für HealthFlow</div>
+            <div class="news-text">Interoperable Patientendossiers werden für alle Praxen Pflicht. Direkter Wachstumstreiber für Plattformlösungen wie HealthFlow AG.</div>
+          </div>
+          <div class="news-item" style="border-left-color:#BA7517;">
+            <div class="news-date">05.06.2026 · Kisim Blog</div>
+            <div class="news-title">Kisim lanciert KI-Dokumentenmanagement – Wettbewerbs-Update</div>
+            <div class="news-text">Neuer Konkurrenzimpuls im Bereich Dateneingabe. HealthFlow differenziert sich durch überlegenes Monitoring-Modul und direktere Patientenanbindung.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. BENACHRICHTIGUNGEN -->
+      <div class="card">
+        <div class="card-label">Benachrichtigungen</div>
+        <p style="font-size:12.5px;color:#666;margin-bottom:10px;">Wie möchten Sie über Neuigkeiten zu HealthFlow AG informiert werden?</p>
+        <div class="alert-options">
+          <label class="alert-option"><input type="radio" name="alert" value="every" onclick="setAlert()"> Bei jedem Update sofort per E-Mail</label>
+          <label class="alert-option"><input type="radio" name="alert" value="milestones" onclick="setAlert()" checked> Nur bei wichtigen Meilensteinen</label>
+          <label class="alert-option"><input type="radio" name="alert" value="none" onclick="setAlert()"> Gar nicht – ich schaue selbst im Portal nach</label>
+        </div>
+        <div class="alert-confirm" id="alert-confirm">✓ Einstellung gespeichert.</div>
+      </div>
+
+      <!-- 3. INVESTOREN-FRAGEN -->
+      <div class="card">
+        <div class="card-label">Investoren-Fragen-Modul</div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq('f1')">Wie ist die Cap Table aktuell strukturiert? <span class="faq-chevron" id="f1-chev">›</span></div><div class="faq-a" id="f1">Gründerteam 76%, Seed-Investoren 19%, ESOP 5%. Die Series A verwässert auf: Gründer 61%, Seed 15%, Series A 20%, ESOP 4%.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq('f2')">Nach welcher Logik wurde die Bewertung festgelegt? <span class="faq-chevron" id="f2-chev">›</span></div><div class="faq-a" id="f2">Vergleich mit europäischen Digital-Health-Seed-/Series-A-Runden ähnlicher ARR-Grösse (CHF 100k–200k), ergänzt um Aufschlag für nachgewiesenes Wachstum und 0% Churn.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq('f3')">Wie ist das IP geschützt? <span class="faq-chevron" id="f3-chev">›</span></div><div class="faq-a" id="f3">Kerncode liegt vollständig bei HealthFlow AG. Patentanmeldung in Vorbereitung, aktuell Geschäftsgeheimnis-geschützt.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq('f4')">Aktien oder Wandeldarlehen? <span class="faq-chevron" id="f4-chev">›</span></div><div class="faq-a" id="f4">Direkte Aktienzeichnung – schafft von Beginn an Klarheit über Beteiligungsverhältnisse.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq('f5')">Was ist die Exit-Strategie? <span class="faq-chevron" id="f5-chev">›</span></div><div class="faq-a" id="f5">Realistischster Pfad: strategische Übernahme durch einen Praxissoftware- oder MedTech-Anbieter in DACH in 5–7 Jahren. IPO nicht als primäres Szenario.</div></div>
+      </div>
+
+      <!-- 4. DIREKTER DIALOG -->
+      <div class="card">
+        <div class="card-label">Direkter Dialog – HealthFlow AG ↔ Investor</div>
+        <div class="dialog-outer">
+          <div class="dialog-tab-row">
+            <button class="d-tab active" onclick="switchDTab('konv', this)">💬 Konversationen</button>
+            <button class="d-tab" onclick="switchDTab('broad', this)">📢 Broadcast</button>
+          </div>
+          <div id="dtab-konv">
+            <div class="dialog-body">
+              <div class="msg-row">
+                <div class="msg-sender">Urs Frei</div>
+                <div class="tag-wichtig">🔔 Wichtig</div>
+                <div class="msg-bubble msg-in">Guten Tag, ich hätte eine Frage zur aktuellen Burn Rate. Wie berechnet sich diese genau? Sind da nur operative Kosten drin oder auch CAPEX?</div>
+                <div class="msg-time">14:22 · 09.06.2026</div>
+              </div>
+              <div class="msg-row msg-out-row">
+                <div class="msg-sender-right">HealthFlow Management (Sarah Dupont)</div>
+                <div class="msg-bubble msg-out">Guten Tag Herr Frei. Die Burn Rate von CHF 42k/Monat umfasst alle operativen Kosten inkl. laufendem CAPEX (~8%). Der Cash-Bestand von CHF 588k ergibt damit 14 Monate Runway.</div>
+                <div class="msg-time-right">16:05 · 09.06.2026</div>
+              </div>
+              <div class="msg-row">
+                <div class="msg-sender">Urs Frei</div>
+                <div class="msg-bubble msg-in">Besten Dank für die schnelle Klärung. Das macht Sinn.</div>
+                <div class="msg-time">08:44 · 10.06.2026</div>
+              </div>
             </div>
-            <div class="kpi-card">
-              <div class="kpi-val">23</div>
-              <div class="kpi-lbl">Aktive Kunden</div>
-              <div class="kpi-delta delta-up">↑ +5 neue Kunden</div>
-              <span class="kpi-explain-btn" onclick="toggleExplain('exp2')">ℹ️ Erklärung</span>
-              <div class="kpi-explain-text" id="exp2">Netto-Zuwachs von 5 Kunden bei 0 Abgängen im Quartal – ein frühes, positives Signal für Product-Market-Fit im Zielsegment.</div>
+            <div class="dialog-input-row">
+              <input class="dialog-input-field" type="text" placeholder="Nachricht an HealthFlow AG schreiben..." onclick="showDialogDemo()">
+              <button class="dialog-send-btn" onclick="showDialogDemo()">Senden</button>
             </div>
-            <div class="kpi-card">
-              <div class="kpi-val">CHF 42k</div>
-              <div class="kpi-lbl">Burn-Rate / Monat</div>
-              <div class="kpi-delta delta-flat">Stabil</div>
-              <span class="kpi-explain-btn" onclick="toggleExplain('exp3')">ℹ️ Erklärung</span>
-              <div class="kpi-explain-text" id="exp3">CHF 42'000 pro Monat entspricht beim aktuellen Kontostand rund 14 Monaten Runway – ausreichend, um die laufende Series A ohne Zeitdruck abzuschliessen.</div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-val">8.2</div>
-              <div class="kpi-lbl">NPS (Kundenzufriedenheit)</div>
-              <div class="kpi-delta delta-up">↑ +0.4 vs. Vorquartal</div>
-              <span class="kpi-explain-btn" onclick="toggleExplain('exp4')">ℹ️ Erklärung</span>
-              <div class="kpi-explain-text" id="exp4">Werte über 8 gelten in B2B-SaaS als starkes Zeichen für Weiterempfehlungsbereitschaft der bestehenden Kundschaft.</div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-val">14 Mo.</div>
-              <div class="kpi-lbl">Runway</div>
-              <div class="kpi-delta delta-flat">Stabil</div>
-              <span class="kpi-explain-btn" onclick="toggleExplain('exp5')">ℹ️ Erklärung</span>
-              <div class="kpi-explain-text" id="exp5">Bezieht die laufenden Series-A-Zusagen noch nicht mit ein – bei Abschluss der Runde verlängert sich der Runway auf voraussichtlich über 20 Monate.</div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-val">4</div>
-              <div class="kpi-lbl">Teammitglieder (FTE)</div>
-              <div class="kpi-delta delta-up">↑ +1 seit letztem Update</div>
-              <span class="kpi-explain-btn" onclick="toggleExplain('exp6')">ℹ️ Erklärung</span>
-              <div class="kpi-explain-text" id="exp6">Die Erweiterung erfolgte gezielt im Vertrieb, um die wachsende Kundenbasis in der Deutschschweiz zu betreuen.</div>
+            <div class="dialog-demo-note" id="dialog-demo-msg">✓ Demo: In der Live-Version wird die Nachricht direkt ans HealthFlow-Management übermittelt. Antwortzeit i.d.R. 24h.</div>
+          </div>
+          <div id="dtab-broad" style="display:none;">
+            <div class="dialog-body">
+              <div class="broadcast-item">
+                <div class="broadcast-title">⚠️ WICHTIG: Abschluss Series A – nächste Schritte</div>
+                <div class="broadcast-text">Liebe Investorinnen und Investoren, der Abschluss der Series A ist für Ende Juli 2026 geplant. Noch nicht unterzeichnete Term Sheets bitte bis 20.07.2026 zurücksenden.</div>
+                <div class="broadcast-date">09.06.2026 · HealthFlow Management</div>
+              </div>
+              <div class="broadcast-item">
+                <div class="broadcast-title">📊 Q1 2026 Update jetzt verfügbar</div>
+                <div class="broadcast-text">Das vollständige Q1-Update inkl. Finanzzahlen, Kundenwachstum und Meilenstein-Status ist im Update-Archiv abrufbar.</div>
+                <div class="broadcast-date">10.04.2026 · HealthFlow Management</div>
+              </div>
             </div>
           </div>
         </div>
+        <p style="font-size:11px;color:#bbb;margin-top:8px;">Alle Nachrichten werden protokolliert · Separate Kanäle für Einzel-Konversationen und Broadcasts an alle Investoren</p>
+      </div>
 
+    </div>
+    <div class="gate-lock"><span class="lock-icon">🔒</span>Verfügbar ab Stufe «Investor (NDA)»: vollständige KPIs, Cap Table, Co-Investor-Pipeline, Dokumenten-Tresor, Investoren-Updates &amp; Markt-News, Benachrichtigungen, Investoren-Fragen, Direkter Dialog.</div>
+  </div>
+
+  <!-- ── AKTIONÄRS-PORTAL (4. Zugangsebene) ── -->
+  <div class="gated" data-level="shareholder">
+    <div class="gate-content">
+
+      <div class="sh-header-box">🏦 <strong>Aktionärs-Portal – Persönlicher Bereich</strong> · Exklusiv für Investorinnen und Investoren mit formalisierter Beteiligung (Namenaktien und/oder Wandelanleihe)</div>
+
+      <!-- PORTFOLIO-ÜBERSICHT -->
+      <div class="portfolio-banner">
+        <div class="portfolio-title">Meine Beteiligung – HealthFlow AG</div>
+        <div class="portfolio-val">CHF 41'250</div>
+        <div class="portfolio-sub">Gesamtwert der Beteiligung (impliziert, Series-A pre-money CHF 2.0 Mio.)</div>
+        <div class="portfolio-gain">↑ +CHF 6'250 (+25.0%) seit Erstzahlung</div>
+        <div class="pos-grid">
+          <div class="pos-item"><div class="pos-val">250</div><div class="pos-lbl">Namenaktien (CHF 1 Nennwert)</div></div>
+          <div class="pos-item"><div class="pos-val">CHF 25'000</div><div class="pos-lbl">Investiertes Kapital Aktien</div></div>
+          <div class="pos-item"><div class="pos-val">CHF 10'000</div><div class="pos-lbl">Wandelanleihe (3% p.a.)</div></div>
+          <div class="pos-item"><div class="pos-val">CHF 150</div><div class="pos-lbl">Aufgelaufene Zinsen 2026</div></div>
+        </div>
+      </div>
+
+      <!-- TRANSAKTIONSHISTORIE + STAMMDATEN -->
+      <div class="portal-two-col">
+        <div class="card">
+          <div class="card-label">Transaktionshistorie</div>
+          <table class="tx-table">
+            <tr><th>Datum</th><th>Instrument</th><th>Typ</th><th>Stk./Nenn.</th><th>Kurs/Rate</th><th>Betrag</th></tr>
+            <tr><td>15.05.2026</td><td>Namenaktien</td><td><span class="tx-type tx-buy">Kauf</span></td><td>250</td><td>CHF 100.00</td><td>CHF 25'000</td></tr>
+            <tr><td>01.02.2026</td><td>Wandelanleihe</td><td><span class="tx-type tx-buy">Zeichnung</span></td><td>CHF 10'000</td><td>3.0% p.a.</td><td>CHF 10'000</td></tr>
+            <tr><td>30.06.2026</td><td>Wandelanleihe</td><td><span class="tx-type tx-coupon">Zinsgutschrift</span></td><td>–</td><td>1.5% (Hj.)</td><td>CHF 150</td></tr>
+          </table>
+          <p style="font-size:11px;color:#bbb;margin-top:8px;">Alle Angaben fiktiv (Demoversion) · Für Steuer-Bescheinigungen: investor@healthflow.ch</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Stammdaten &amp; Profil</div>
+          <div class="profile-grid2">
+            <div class="profile-item"><div class="profile-key">Name</div><div class="profile-val">Urs Frei</div></div>
+            <div class="profile-item"><div class="profile-key">Steuerdomizil</div><div class="profile-val">Kanton Zürich</div></div>
+            <div class="profile-item"><div class="profile-key">Referenzbank</div><div class="profile-val">Raiffeisenbank Zürich</div></div>
+            <div class="profile-item"><div class="profile-key">IBAN</div><div class="profile-val">CH12 3456 **** ****</div></div>
+            <div class="profile-item"><div class="profile-key">Aktionär seit</div><div class="profile-val">Februar 2026</div></div>
+            <div class="profile-item"><div class="profile-key">Aktionärstyp</div><div class="profile-val">Privatinvestor</div></div>
+          </div>
+          <p style="font-size:11px;color:#bbb;margin-top:10px;padding-top:8px;border-top:1px solid #f0f0ee;">Stammdaten anpassen: investor@healthflow.ch</p>
+        </div>
+      </div>
+
+      <!-- FINANZBERICHTE -->
+      <div class="card">
+        <div class="card-label">Finanzberichte &amp; Ausschüttungshistorie</div>
         <div class="portal-two-col">
-          <div class="card">
-            <div class="card-label">Investor-Updates (Archiv)</div>
-            <div class="update-item"><div class="update-title">Q1 2026 Update – Starkes Wachstum, Series A läuft</div><div class="update-meta">10.04.2026 · PDF verfügbar</div></div>
-            <div class="update-item"><div class="update-title">Q4 2025 Update – Produktlaunch &amp; erste Kunden</div><div class="update-meta">15.01.2026 · PDF verfügbar</div></div>
-            <div class="update-item"><div class="update-title">Meilenstein-Update: Seed-Runde abgeschlossen</div><div class="update-meta">20.01.2026 · Kurzinfo</div></div>
-            <div class="update-item"><div class="update-title">Q3 2025 Update – Pilotphase &amp; erstes Feedback</div><div class="update-meta">08.10.2025 · PDF verfügbar</div></div>
-          </div>
-          <div class="card">
-            <div class="card-label">Dokumente &amp; Unterlagen</div>
-            <div class="doc-row"><span>One-Pager (aktuell)</span><span class="doc-badge badge-public">Öffentlich</span></div>
-            <div class="doc-row"><span>Pitch Deck Series A</span><span class="doc-badge badge-investor">Investor</span></div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:8px;">Verfügbare Berichte</div>
+            <div class="doc-row"><span>Jahresbericht 2025 (inkl. Jahresrechnung)</span><span class="doc-badge badge-shareholder">Aktionäre</span></div>
+            <div class="doc-row"><span>Q1 2026 Managementbericht</span><span class="doc-badge badge-shareholder">Aktionäre</span></div>
             <div class="doc-row"><span>Finanzplan 2026–2028</span><span class="doc-badge badge-investor">Investor</span></div>
-            <div class="doc-row"><span>GV-Protokoll 2025</span><span class="doc-badge badge-shareholder">Aktionäre</span></div>
-            <div class="doc-row"><span>Jahresbericht 2025</span><span class="doc-badge badge-shareholder">Aktionäre</span></div>
+            <div class="doc-row"><span>Steuerbescheinigung 2025 (auf Anfrage)</span><span class="doc-badge badge-shareholder">Aktionäre</span></div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:8px;">Ausschüttungen</div>
+            <div class="news-item" style="border-left-color:#888;background:#f8f8f6;">
+              <div class="news-date">Dividende / Ausschüttung 2025</div>
+              <div class="news-title" style="font-style:normal;font-size:13px;">Keine Dividende – Fokus auf Wachstum</div>
+              <div class="news-text">Als Wachstums-Startup werden Gewinne vollständig reinvestiert. Zinszahlungen auf die Wandelanleihe erfolgen gemäss Emissionsbedingungen (3% p.a., halbjährlich).</div>
+            </div>
           </div>
         </div>
-
-        <div class="card">
-          <div class="card-label">Benachrichtigungen (Alert-Konfiguration, Pitchly-Punkt 3)</div>
-          <p style="font-size:12.5px;color:#666;margin-bottom:10px;">Wie möchten Sie über Neuigkeiten zu HealthFlow AG informiert werden?</p>
-          <div class="alert-options">
-            <label class="alert-option"><input type="radio" name="alert" value="every" onclick="setAlert(this.value)"> Bei jedem Update sofort per E-Mail</label>
-            <label class="alert-option"><input type="radio" name="alert" value="milestones" onclick="setAlert(this.value)" checked> Nur bei wichtigen Meilensteinen</label>
-            <label class="alert-option"><input type="radio" name="alert" value="none" onclick="setAlert(this.value)"> Gar nicht – ich schaue selbst im Portal nach</label>
-          </div>
-          <div class="alert-confirm" id="alert-confirm">✓ Einstellung gespeichert.</div>
-        </div>
-
-        <div class="card">
-          <div class="card-label">Investoren-Fragen-Modul (Pitchly-Punkt 2)</div>
-          <div class="faq-item">
-            <div class="faq-q" onclick="toggleFaq('faq1')">Wie ist die Cap Table aktuell strukturiert? <span class="faq-chevron" id="faq1-chev">›</span></div>
-            <div class="faq-a" id="faq1">Gründerteam hält nach der Seed-Runde rund 78%, Seed-Investoren rund 17%, ein Mitarbeiterbeteiligungsplan ist mit 5% reserviert. Die Series A wird über neue Aktien bei einer Pre-Money-Bewertung strukturiert, Details im Finanzplan-Dokument.</div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-q" onclick="toggleFaq('faq2')">Nach welcher Logik wurde die Bewertung für die Series A festgelegt? <span class="faq-chevron" id="faq2-chev">›</span></div>
-            <div class="faq-a" id="faq2">Basis ist ein Vergleich mit Schweizer und europäischen Digital-Health-Seed-/Series-A-Runden ähnlicher ARR-Grössenordnung, ergänzt um einen Aufschlag für das bestehende Kundenwachstum.</div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-q" onclick="toggleFaq('faq3')">Wie ist das geistige Eigentum (IP) geschützt? <span class="faq-chevron" id="faq3-chev">›</span></div>
-            <div class="faq-a" id="faq3">Die Kernsoftware liegt vollständig bei HealthFlow AG, keine Abhängigkeit von Gründerpersonen. Ein Patent für das Monitoring-Verfahren ist in Vorbereitung, aktuell als Geschäftsgeheimnis geschützt.</div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-q" onclick="toggleFaq('faq4')">Aktien oder Wandeldarlehen für die Series A? <span class="faq-chevron" id="faq4-chev">›</span></div>
-            <div class="faq-a" id="faq4">Die laufende Runde wird als direkte Aktienzeichnung strukturiert, nicht als Wandeldarlehen – das schafft für alle Beteiligten von Anfang an Klarheit über die Beteiligungsverhältnisse.</div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-q" onclick="toggleFaq('faq5')">Was ist die langfristige Exit-Strategie? <span class="faq-chevron" id="faq5-chev">›</span></div>
-            <div class="faq-a" id="faq5">Realistischster Pfad ist eine Übernahme durch einen etablierten Anbieter von Praxis- oder Spitalsoftware in der DACH-Region in 5–7 Jahren; ein IPO wird aufgrund der Marktgrösse nicht als primäres Szenario verfolgt.</div>
-          </div>
-        </div>
-
       </div>
-      <div class="gate-lock"><span class="lock-icon">🔒</span>Verfügbar ab Stufe «Investor (NDA)»: vollständige Kennzahlen mit Erklärungen, Update-Archiv, Dokumente, Benachrichtigungen, Investoren-Fragen-Modul.</div>
-    </div>
 
-    <div class="compliance-note">🔒 Zugriffe auf dieses Portal werden protokolliert (Compliance-/Rollen-Layer, Audit-Trail – sichtbar für das Gründerteam im Cockpit).</div>
+      <!-- FINANZKALENDER -->
+      <div class="card">
+        <div class="card-label">Finanzkalender 2026–2027</div>
+        <div class="cal-row"><div class="cal-date">12.09.2026</div><div class="cal-event">Ordentliche Generalversammlung · Zürich, 17:00 Uhr <span class="cal-badge cal-gv">GV</span></div></div>
+        <div class="cal-row"><div class="cal-date">Aug. 2026</div><div class="cal-event">Q2 Investor-Update (schriftlich) <span class="cal-badge cal-upd">Update</span></div></div>
+        <div class="cal-row"><div class="cal-date">Okt. 2026</div><div class="cal-event">Q3 Investor-Update (schriftlich) <span class="cal-badge cal-upd">Update</span></div></div>
+        <div class="cal-row"><div class="cal-date">Dez. 2026</div><div class="cal-event">Jahresabschluss 2026 (provisorisch) <span class="cal-badge cal-rep">Bericht</span></div></div>
+        <div class="cal-row"><div class="cal-date">Mrz. 2027</div><div class="cal-event">Jahresbericht 2026 (definitiv) <span class="cal-badge cal-rep">Bericht</span></div></div>
+        <div class="cal-row"><div class="cal-date">Sept. 2027</div><div class="cal-event">Ordentliche GV 2027 <span class="cal-badge cal-gv">GV</span></div></div>
+      </div>
+
+      <!-- GV-DOKUMENTE & MITWIRKUNGSRECHTE -->
+      <div class="card">
+        <div class="card-label">Generalversammlung – Mitwirkungsrechte</div>
+        <div class="gv-invite-box">📅 Ordentliche GV · 12. September 2026 · 17:00 Uhr · Zürich · Anmeldung bis 05.09.2026</div>
+        <ul class="gv-doc-list">
+          <li class="gv-doc-item">
+            <div class="gv-doc-name">📄 Einladung &amp; Traktandenliste GV 2026</div>
+            <span class="gv-doc-action" onclick="showGVDemo()">📥 Herunterladen</span>
+          </li>
+          <li class="gv-doc-item">
+            <div class="gv-doc-name">📄 Jahresbericht 2025 (GV-Beilage)</div>
+            <span class="gv-doc-action" onclick="showGVDemo()">📥 Herunterladen</span>
+          </li>
+          <li class="gv-doc-item">
+            <div class="gv-doc-name">📄 Stimmrechtsformular (elektronisch)</div>
+            <span class="gv-doc-action" onclick="showGVDemo()">✍️ Ausfüllen</span>
+          </li>
+          <li class="gv-doc-item">
+            <div class="gv-doc-name">📄 Vollmacht an Stimmrechtsvertreter</div>
+            <span class="gv-doc-action" onclick="showGVDemo()">✍️ Ausstellen</span>
+          </li>
+        </ul>
+        <div class="dialog-demo-note" id="gv-demo-msg">✓ Demo: In der Live-Version wird das Dokument heruntergeladen resp. das elektronische Formular geöffnet.</div>
+      </div>
+
+      <!-- DIREKTER IR-KONTAKT -->
+      <div class="card">
+        <div class="card-label">Direkter Kontakt – Investor Relations</div>
+        <div class="ir-contact-box">
+          <div class="ir-avatar">SD</div>
+          <div>
+            <div class="ir-name">Sarah Dupont</div>
+            <div class="ir-role">CEO &amp; Head of Investor Relations · HealthFlow AG</div>
+            <div class="ir-email" onclick="showIRDemo()">📧 investor@healthflow.ch</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;padding:10px 12px;background:#f8f8f6;border-radius:8px;font-size:12px;color:#666;">
+          Für Stammdaten-Änderungen, Steuerbescheinigungen, GV-Fragen und allgemeine IR-Anfragen. Antwortzeit: i.d.R. 48h (Geschäftsstunden).
+        </div>
+        <div class="dialog-demo-note" id="ir-demo-msg">✓ Demo: In der Live-Version öffnet sich Ihr E-Mail-Client mit vorausgefüllter Empfängeradresse.</div>
+      </div>
+
+    </div>
+    <div class="gate-lock"><span class="lock-icon">🔒</span>Verfügbar ab Stufe «Aktionär»: persönliche Portfolioübersicht, Transaktionshistorie, Stammdaten, Finanzberichte, Finanzkalender, GV-Unterlagen, Direktkontakt IR.</div>
   </div>
 
-  <footer>
-    KIGIR-Cockpit – Demoversion (HealthFlow AG) · Version 1.0 · Stand: 11.07.2026 · Christoph Ottiger · Transferthesis CAS HSG DIBT 11<br>
-    Zeigt die aus Phase 4 des <strong>KIGIR-Frameworks</strong> entstehenden Nutzeroberflächen. Alle Daten fiktiv.
-  </footer>
+  <div class="compliance-note">🔒 Zugriffe werden protokolliert (Audit-Trail, sichtbar für das Gründerteam im Cockpit). Alle Dokumente mit Wasserzeichen.</div>
+
+</div><!-- END INVESTOR VIEW -->
+
+<footer>
+  KIGIR-Cockpit – Demoversion (HealthFlow AG) · Version 2.0 · Stand: 11.07.2026 · Christoph Ottiger · Transferthesis CAS HSG DIBT 11<br>
+  Zeigt die aus Phase 4 des <strong>KIGIR-Frameworks</strong> entstehenden Nutzeroberflächen. Alle Daten fiktiv.
+</footer>
 </div>
 
 <script>
-function setRole(role) {
-  document.getElementById('role-founder').classList.toggle('active', role === 'founder');
-  document.getElementById('role-investor').classList.toggle('active', role === 'investor');
-  document.getElementById('view-founder').classList.toggle('visible', role === 'founder');
-  document.getElementById('view-investor').classList.toggle('visible', role === 'investor');
+function setRole(r) {
+  document.getElementById('role-founder').classList.toggle('active', r==='founder');
+  document.getElementById('role-investor').classList.toggle('active', r==='investor');
+  document.getElementById('view-founder').classList.toggle('visible', r==='founder');
+  document.getElementById('view-investor').classList.toggle('visible', r==='investor');
 }
 
-const accessRank = { public: 0, contact: 1, nda: 2 };
-const accessLabel = { public: 'Öffentlicher Zugang', contact: 'Nach Erstkontakt', nda: '✓ Bestätigter Investor (NDA)' };
-const accessExplain = {
-  public: 'Stufe «Öffentlich»: sichtbar für alle, die den One-Pager-Link erhalten – z.B. bei Kaltakquise über eine Plattform (Pitchly-Punkt 1, gestaffelte Pre-Access-Zugriffsebenen, vgl. KIGIR-Framework Phase 1).',
-  contact: 'Stufe «Nach Erstkontakt»: zusätzliche Eckdaten und Meilensteine, sobald gegenseitiges Interesse besteht – noch vor einer formellen NDA.',
-  nda: 'Stufe «Investor (NDA)»: vollständiger Zugang inkl. Kennzahlen mit KI-Erklärung, Dokumenten-Datenraum, Update-Archiv und Investoren-Fragen-Modul.'
+const aRank = {public:0, contact:1, nda:2, shareholder:3};
+const aLabel = {public:'Potentieller Investor (öffentlich)', contact:'Potentieller Investor – nach Erstkontakt', nda:'✓ Potentieller Investor – NDA unterzeichnet', shareholder:'✓ Investor'};
+const aExplain = {
+  public:'Stufe «Potentieller Investor»: Das Schaufenster – frei zugänglich, kein Login. Ziel: Aufmerksamkeit generieren, Relevanz prüfen und zur Kontaktaufnahme animieren. CTA: Zugang anfordern.',
+  contact:'Stufe «Potentieller Investor nach Erstkontakt»: One-Pager, Team, Umsatz-Roadmap und Investment-Zusammenfassung nach Prüfung. Zugang per individuellem Link. CTA: NDA unterzeichnen.',
+  nda:'Stufe «Potentieller Investor mit NDA»: Vollständiger Datenraum inkl. KPIs, Cap Table, Co-Investor-Pipeline, Dokumenten-Tresor und Fragen-Modul. Erst nach digitaler NDA-Unterzeichnung.',
+  shareholder:'Stufe «Investor»: Persönliches Portal für Investorinnen und Investoren mit formalisierter Beteiligung – Portfolioübersicht, Transaktionshistorie, GV-Unterlagen, Stammdaten, direkter IR-Kontakt.'
 };
 
-function setAccess(level) {
-  ['public','contact','nda'].forEach(l => {
-    document.getElementById('acc-'+l).classList.toggle('active', l === level);
+function setAccess(lvl) {
+  ['public','contact','nda','shareholder'].forEach(l => {
+    document.getElementById('acc-'+l).classList.toggle('active', l===lvl);
   });
-  document.getElementById('access-explain-text').textContent = accessExplain[level];
-  document.getElementById('access-status-badge').textContent = accessLabel[level];
+  document.getElementById('access-explain-text').textContent = aExplain[lvl];
+  document.getElementById('access-status-badge').textContent = aLabel[lvl];
   document.querySelectorAll('.gated').forEach(el => {
-    const required = accessRank[el.getAttribute('data-level')];
-    const unlocked = accessRank[level] >= required;
-    el.querySelector('.gate-content').style.display = unlocked ? '' : 'none';
-    el.querySelector('.gate-lock').style.display = unlocked ? 'none' : 'block';
+    const req = aRank[el.getAttribute('data-level')];
+    const ok = aRank[lvl] >= req;
+    el.querySelector('.gate-content').style.display = ok ? '' : 'none';
+    el.querySelector('.gate-lock').style.display = ok ? 'none' : 'block';
+  });
+  // CTA-Sichtbarkeit: Anfordern-Button nur bei öffentlich, NDA-CTA nur bei Erstkontakt
+  const pubCta = document.getElementById('public-cta-wrapper');
+  if (pubCta) pubCta.style.display = (lvl === 'public') ? '' : 'none';
+  const ndaCta = document.getElementById('nda-cta-wrapper');
+  if (ndaCta) ndaCta.style.display = (lvl === 'contact') ? '' : 'none';
+}
+
+function toggleExplain(id) { document.getElementById(id).classList.toggle('open'); }
+function setAlert() { document.getElementById('alert-confirm').classList.add('show'); }
+function toggleFaq(id) {
+  document.getElementById(id).classList.toggle('open');
+  document.getElementById(id+'-chev').classList.toggle('rot');
+}
+function showCTA() {
+  document.getElementById('cta-demo-msg').style.display='block';
+}
+function switchNewsTab(id, el) {
+  document.querySelectorAll('.news-tab-row .n-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('news-updates').style.display = id === 'updates' ? '' : 'none';
+  document.getElementById('news-markt').style.display = id === 'markt' ? '' : 'none';
+}
+function switchDTab(id, el) {
+  document.querySelectorAll('.dialog-tab-row .d-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('dtab-konv').style.display = id === 'konv' ? '' : 'none';
+  document.getElementById('dtab-broad').style.display = id === 'broad' ? '' : 'none';
+}
+function showDialogDemo() {
+  document.getElementById('dialog-demo-msg').style.display = 'block';
+}
+function showGVDemo() {
+  document.getElementById('gv-demo-msg').style.display = 'block';
+}
+function showIRDemo() {
+  document.getElementById('ir-demo-msg').style.display = 'block';
+}
+function showNDACTA() {
+  document.getElementById('nda-demo-msg').style.display='block';
+}
+
+function switchInvNews(id, el) {
+  el.closest('.card').querySelectorAll('.n-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  ['inv-upd','inv-arch','inv-mkt'].forEach(d => {
+    document.getElementById(d).style.display = d.endsWith(id) ? '' : 'none';
   });
 }
-
-function toggleExplain(id) {
-  document.getElementById(id).classList.toggle('open');
+function switchMgmtDTab(id, el) {
+  el.closest('.dialog-outer').querySelectorAll('.d-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('mgmt-konv').style.display = id === 'konv' ? '' : 'none';
+  document.getElementById('mgmt-broad').style.display = id === 'broad' ? '' : 'none';
 }
-
-function setAlert(value) {
-  const box = document.getElementById('alert-confirm');
-  box.classList.add('show');
+function showMgmtDialogDemo() {
+  ['mgmt-dialog-demo-msg','mgmt-dialog-demo-msg2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'block';
+  });
 }
-
-function toggleFaq(id) {
-  const a = document.getElementById(id);
-  const chev = document.getElementById(id+'-chev');
-  a.classList.toggle('open');
-  chev.classList.toggle('rot');
-}
-
-// Initialize gated sections to default (public) state on load
-document.addEventListener('DOMContentLoaded', () => {
-  setAccess('public');
-});
+document.addEventListener('DOMContentLoaded', () => { setAccess('public'); });
 </script>
 </body>
 </html>
