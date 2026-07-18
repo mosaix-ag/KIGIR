@@ -553,6 +553,26 @@ function showTab(name, el) {
   document.getElementById('tab-'+name).classList.add('visible');
 }
 
+// --- Hash-Routing fuer den Walkthrough auf index.html ---
+// Erlaubt Links wie KIGIR_Framework.html#tab-tools oder #phase-2
+function applyHashRoute() {
+  const hash = (location.hash || '').replace('#','');
+  if (!hash) return;
+  if (hash.startsWith('tab-')) {
+    const name = hash.replace('tab-','');
+    const tabEl = document.querySelector(`.tab[onclick*="showTab('${name}'"]`);
+    if (tabEl) showTab(name, tabEl);
+  } else if (hash.startsWith('phase-')) {
+    const n = hash.replace('phase-','');
+    const flowTabEl = document.querySelector(`.tab[onclick*="showTab('flow'"]`);
+    if (flowTabEl) showTab('flow', flowTabEl);
+    const phaseEl = document.getElementById('pc'+n);
+    if (phaseEl) showPhase(parseInt(n,10), phaseEl);
+  }
+}
+document.addEventListener('DOMContentLoaded', applyHashRoute);
+window.addEventListener('hashchange', applyHashRoute);
+
 const data = {
   'notion-master': {
     badge: ['#E1F5EE','#085041','Phase 1 – Tool'],

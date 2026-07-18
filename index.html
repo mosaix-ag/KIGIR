@@ -29,6 +29,30 @@
 
   .fictive-note { background: #fff; border-left: 4px solid #1F4E79; border-radius: 8px; padding: 14px 16px; font-size: 12.5px; color: #555; margin-bottom: 2rem; }
 
+  /* OHNE/MIT VERGLEICH */
+  .compare-row { display: flex; align-items: stretch; gap: 14px; margin-bottom: 2rem; }
+  .compare-col { flex: 1; border-radius: 12px; padding: 16px 18px; }
+  .compare-without { background: #fdf1f1; border: 1px solid #f0c9c9; }
+  .compare-with { background: #eef8f3; border: 1px solid #c9e8d8; }
+  .compare-label { font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+  .compare-without .compare-label { color: #B03A3A; }
+  .compare-with .compare-label { color: #147A55; }
+  .compare-list { list-style: none; font-size: 12.5px; color: #444; line-height: 1.9; }
+  .compare-list li::before { content: "– "; color: #999; }
+  .compare-arrow { display: flex; align-items: center; font-size: 20px; color: #bbb; }
+  @media (max-width: 720px) { .compare-row { flex-direction: column; } .compare-arrow { display:none; } }
+
+  /* WALKTHROUGH */
+  .walkthrough-card { background: #fff; border: 1.5px solid #ddd; border-radius: 14px; padding: 1.75rem; margin-bottom: 2rem; }
+  .walkthrough-toggle { margin-top: 10px; background: #1F4E79; color: #fff; border: none; border-radius: 8px; padding: 9px 18px; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .walkthrough-toggle:hover { background: #163a5c; }
+  .wt-step { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid #eee; align-items: center; }
+  .wt-step:last-child { border-bottom: none; }
+  .wt-week { min-width: 74px; font-size: 11px; font-weight: 700; color: #1F4E79; text-transform: uppercase; }
+  .wt-desc { flex: 1; font-size: 13px; color: #333; }
+  .wt-link { font-size: 12px; font-weight: 600; color: #1F4E79; text-decoration: none; white-space: nowrap; }
+  .wt-link:hover { text-decoration: underline; }
+
   /* SITE NAV */
   .sitenav-bar { display: flex; align-items: center; gap: 10px; background: #eef4fb; border: 1px solid #d5e3f5; border-radius: 10px; padding: 10px 16px; margin-bottom: 1.25rem; flex-wrap: wrap; }
   .sitenav-icon { font-size: 14px; }
@@ -59,6 +83,26 @@
     <div class="subtitle">Ein phasenbasiertes Baukasten-Framework zur strukturierten, KI-gestützten Mittelbeschaffung bei Privatinvestoren (CHF 10'000–100'000).</div>
   </div>
 
+  <div class="compare-row">
+    <div class="compare-col compare-without">
+      <div class="compare-label">❌ OHNE FRAMEWORK</div>
+      <ul class="compare-list">
+        <li>Kennzahlen verteilt über 27 Kanäle</li>
+        <li>Inkonsistente Zahlen zwischen Deck, One-Pager und E-Mails</li>
+        <li>Reaktive, ad-hoc Investorenkommunikation</li>
+      </ul>
+    </div>
+    <div class="compare-arrow">→</div>
+    <div class="compare-col compare-with">
+      <div class="compare-label">✓ MIT KIGIR-FRAMEWORK</div>
+      <ul class="compare-list">
+        <li>Single Source of Truth (Master-Narrativ)</li>
+        <li>KI-geprüfte Konsistenz vor jedem Versand</li>
+        <li>Strukturierter, phasenbasierter Prozess</li>
+      </ul>
+    </div>
+  </div>
+
   <a class="card" href="KIGIR_Framework.html">
     <div class="card-label">Framework</div>
     <div class="card-title">KIGIR-Framework</div>
@@ -87,6 +131,40 @@
 
   <div style="height:32px"></div>
 
+  <div class="walkthrough-card">
+    <div class="card-label">Geführter Walkthrough</div>
+    <div class="card-title">Ein typischer Fundraising-Zyklus, Schritt für Schritt</div>
+    <div class="card-desc">Zeigt, wie die beiden Prototypen oben im Zeitverlauf zusammenspielen – kein dritter Prototyp, sondern ein Wegweiser durch die bestehenden zwei, orientiert an den vier Phasen des KIGIR-Frameworks.</div>
+    <button class="walkthrough-toggle" onclick="toggleWalkthrough()" id="wt-toggle-btn">Walkthrough anzeigen ▾</button>
+    <div id="walkthrough-steps" style="display:none;margin-top:16px;">
+      <div class="wt-step">
+        <div class="wt-week">Woche 1</div>
+        <div class="wt-desc">Narrativ &amp; Datenraum stehen (Phase 1 – Positionierung)</div>
+        <a class="wt-link" href="KIGIR_Framework.html#phase-1">Ansehen →</a>
+      </div>
+      <div class="wt-step">
+        <div class="wt-week">Woche 3</div>
+        <div class="wt-desc">Shortlist qualifiziert per Investor-Scoring (Phase 2 – Identifikation)</div>
+        <a class="wt-link" href="KIGIR_Cockpit_Demo.html#founder">Ansehen →</a>
+      </div>
+      <div class="wt-step">
+        <div class="wt-week">Woche 6</div>
+        <div class="wt-desc">Erste Gespräche laufen (Phase 3 – Ansprache &amp; Mittelbeschaffung)</div>
+        <a class="wt-link" href="KIGIR_Framework.html#phase-3">Ansehen →</a>
+      </div>
+      <div class="wt-step">
+        <div class="wt-week">Woche 9</div>
+        <div class="wt-desc">Investor prüft Datenraum nach NDA-Unterzeichnung</div>
+        <a class="wt-link" href="KIGIR_Cockpit_Demo.html#nda">Ansehen →</a>
+      </div>
+      <div class="wt-step">
+        <div class="wt-week">Woche 12</div>
+        <div class="wt-desc">Runde geschlossen, laufende Pflege beginnt (Phase 4)</div>
+        <a class="wt-link" href="KIGIR_Cockpit_Demo.html#shareholder">Ansehen →</a>
+      </div>
+    </div>
+  </div>
+
   <div class="fictive-note">
     💡 HealthFlow AG ist ein fiktives Referenzunternehmen (Swiss Digital Health SaaS), das ausschliesslich zur Illustration des Frameworks dient. Alle gezeigten Zahlen, Namen und Dokumente sind Beispieldaten.
   </div>
@@ -96,5 +174,14 @@
   </footer>
 
 </div>
+<script>
+function toggleWalkthrough() {
+  const steps = document.getElementById('walkthrough-steps');
+  const btn = document.getElementById('wt-toggle-btn');
+  const open = steps.style.display === 'block';
+  steps.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? 'Walkthrough anzeigen ▾' : 'Walkthrough ausblenden ▴';
+}
+</script>
 </body>
 </html>

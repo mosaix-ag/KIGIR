@@ -594,7 +594,37 @@ footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font
     </div>
   </div>
 
-  <!-- BLOCKER + TERMINE -->
+  <!-- KI-UPDATE-GENERATOR (macht Phase-4-KI-Nutzen erlebbar statt nur beschrieben) -->
+  <div class="card">
+    <div class="card-label">KI-Investor-Update – Entwurf generieren</div>
+    <p style="font-size:12.5px;color:#666;margin:6px 0 10px;">Erstellt einen Update-Entwurf direkt aus den oben gezeigten KPIs. Governance-Regel: Jeder Entwurf wird vor Versand von der Gründerin oder dem Gründer geprüft, individualisiert und freigegeben – kein automatisierter Versand (Kapitel 6.4, Kriterium b).</p>
+    <button class="cta-btn" style="margin-bottom:0;" onclick="generateUpdate()">📝 Quartals-Update generieren (KI-Entwurf)</button>
+    <div id="ki-update-output" style="display:none;margin-top:14px;padding:14px 16px;background:#f8f8f6;border-radius:8px;border-left:4px solid #1F4E79;font-size:12.5px;line-height:1.7;color:#333;">
+      <div style="font-weight:700;color:#1F4E79;margin-bottom:6px;">Betreff: HealthFlow AG – Update Q2 2026</div>
+      «Liebe Investorinnen und Investoren, im zweiten Quartal 2026 ist der MRR von CHF 7.2k auf CHF 12.3k gestiegen (+71% seit Januar), getragen von 5 neuen Praxen (neu 23 aktive Kunden, Churn weiterhin 0%). Die LTV/CAC-Ratio liegt bei 4.4×, deutlich über unserem Zielwert von 3×. Die Series-A-Runde steht bei CHF 380k von CHF 500k (76%), der Runway beträgt bei aktuellem Burn 14 Monate. Nächster Meilenstein: Abschluss Term Sheet Investor #4 bis 14.07.2026.»
+      <div style="margin-top:10px;font-size:11px;color:#999;">↳ KI-Entwurf, automatisch aus den aktuellen Cockpit-Zahlen erstellt. Noch nicht versendet – wartet auf Prüfung und Freigabe durch die Gründung.</div>
+    </div>
+  </div>
+
+  <!-- KI-KONSISTENZPRUEFUNG (macht Phase-1/4-KI-Nutzen erlebbar statt nur beschrieben) -->
+  <div class="card">
+    <div class="card-label">KI-Konsistenzprüfung – Master-Narrativ vs. Pitch-Unterlagen</div>
+    <p style="font-size:12.5px;color:#666;margin:6px 0 10px;">Gleicht das Master-Narrativ (Single Source of Truth, Kapitel 6.1) automatisch mit abgeleiteten Unterlagen ab und markiert Abweichungen, bevor sie Investorinnen und Investoren erreichen.</p>
+    <button class="cta-btn" style="margin-bottom:0;" onclick="runConsistencyCheck()">🔍 Konsistenz prüfen</button>
+    <div id="consistency-output" style="display:none;margin-top:14px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="background:#f8f8f6;border-radius:8px;padding:12px 14px;">
+          <div class="op-title">Master-Narrativ (aktuell, Notion)</div>
+          <div style="font-size:12px;color:#333;line-height:1.7;">Zielmarkt: <strong>6'200 Arztpraxen</strong> Schweiz<br>Preismodell: <strong>CHF 520/Monat</strong><br>Aktive Kunden: <strong>23</strong></div>
+        </div>
+        <div style="background:#fdf1f1;border-radius:8px;padding:12px 14px;border:1px solid #f0c9c9;">
+          <div class="op-title" style="color:#B03A3A;">One-Pager-Entwurf (Stand 15.05.2026)</div>
+          <div style="font-size:12px;color:#333;line-height:1.7;">Zielmarkt: <strong style="background:#f8d7d7;padding:1px 4px;border-radius:3px;">5'800 Arztpraxen</strong> Schweiz<br>Preismodell: CHF 520/Monat<br>Aktive Kunden: 23</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;padding:10px 14px;background:#fdf1f1;border-left:4px solid #E24B4A;border-radius:6px;font-size:12px;color:#B03A3A;">⚠️ Abweichung erkannt: Marktgrösse im One-Pager-Entwurf veraltet (5'800 statt 6'200 Praxen, Stand vor Q1-Update). Vor Versand korrigieren.</div>
+    </div>
+  </div>
   <div class="blocker-row">
     <div class="blocker-box">
       <div class="blocker-title">🚨 Blocker / Decisions needed</div>
@@ -679,6 +709,32 @@ footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font
       </div>
     </div>
     <div class="ci-note">KI-Scan läuft täglich automatisch · Quellen: eHealth-Suisse, TechCrunch, LinkedIn, Branchen-Newsletter · Relevanz-Score bezogen auf HealthFlow AG Wettbewerbs- und Marktkontext · Unterstützt Q&amp;A-Vorbereitung für Investor-Gespräche (KIGIR-Framework, Phase 3)</div>
+  </div>
+
+  <!-- INVESTOR-SCORING (schliesst die Phase-2-Luecke im Cockpit) -->
+  <div class="card">
+    <div class="card-label">Investor-Scoring – Phase 2: Identifikation &amp; Qualifizierung</div>
+    <p style="font-size:12.5px;color:#666;margin:6px 0 12px;">Gewichtet eine Shortlist potenzieller Investorinnen und Investoren nach vier Kriterien zu einem Match-Score. Ergebnis ist eine priorisierte Liste, keine automatisierte Kontaktaufnahme (Kapitel 6.4).</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;margin-bottom:14px;">
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#555;margin-bottom:4px;"><span>Branchen-Fit (Health/Tech)</span><span id="w-branche-val">70%</span></div>
+        <input type="range" min="0" max="100" value="70" id="w-branche" oninput="updateScoring()" style="width:100%;">
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#555;margin-bottom:4px;"><span>Geografische Nähe (Schweiz)</span><span id="w-geo-val">50%</span></div>
+        <input type="range" min="0" max="100" value="50" id="w-geo" oninput="updateScoring()" style="width:100%;">
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#555;margin-bottom:4px;"><span>Ticket-Bereitschaft (CHF 10–100k)</span><span id="w-ticket-val">80%</span></div>
+        <input type="range" min="0" max="100" value="80" id="w-ticket" oninput="updateScoring()" style="width:100%;">
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#555;margin-bottom:4px;"><span>Risikotoleranz (Frühphase)</span><span id="w-risk-val">60%</span></div>
+        <input type="range" min="0" max="100" value="60" id="w-risk" oninput="updateScoring()" style="width:100%;">
+      </div>
+    </div>
+    <div id="scoring-list"></div>
+    <p style="font-size:10.5px;color:#bbb;margin-top:8px;">Fiktive Profile zur Illustration · Score = gewichteter Durchschnitt der vier Reglerwerte je Profil</p>
   </div>
 
   <!-- DIREKTER DIALOG (Management-Ansicht) -->
@@ -1307,7 +1363,61 @@ function showMgmtDialogDemo() {
     if (el) el.style.display = 'block';
   });
 }
-document.addEventListener('DOMContentLoaded', () => { setAccess('public'); });
+
+// --- KI live erlebbar (PoC-Ergaenzung) ---
+function generateUpdate() {
+  document.getElementById('ki-update-output').style.display = 'block';
+}
+function runConsistencyCheck() {
+  document.getElementById('consistency-output').style.display = 'block';
+}
+
+// --- Investor-Scoring, Phase 2 (PoC-Ergaenzung) ---
+const investorProfiles = [
+  {name:'Business Angel A (Zürich)', branche:90, geo:100, ticket:70, risk:80},
+  {name:'Family Office B (Zug)', branche:60, geo:90, ticket:95, risk:40},
+  {name:'Angel-Netzwerk C (Bern)', branche:75, geo:100, ticket:60, risk:70},
+  {name:'Business Angel D (München)', branche:85, geo:20, ticket:80, risk:90},
+  {name:'Privatinvestor E (Basel)', branche:50, geo:95, ticket:50, risk:55},
+];
+function updateScoring() {
+  const wB = +document.getElementById('w-branche').value;
+  const wG = +document.getElementById('w-geo').value;
+  const wT = +document.getElementById('w-ticket').value;
+  const wR = +document.getElementById('w-risk').value;
+  document.getElementById('w-branche-val').textContent = wB+'%';
+  document.getElementById('w-geo-val').textContent = wG+'%';
+  document.getElementById('w-ticket-val').textContent = wT+'%';
+  document.getElementById('w-risk-val').textContent = wR+'%';
+  const totalW = (wB+wG+wT+wR) || 1;
+  const scored = investorProfiles.map(p => ({
+    name: p.name,
+    score: Math.round((p.branche*wB + p.geo*wG + p.ticket*wT + p.risk*wR) / totalW)
+  })).sort((a,b) => b.score - a.score);
+  document.getElementById('scoring-list').innerHTML = scored.map(p => {
+    const color = p.score>=75 ? '#1D9E75' : p.score>=55 ? '#BA7517' : '#999';
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0f0ee;">
+      <div style="flex:1;font-size:12.5px;color:#333;">${p.name}</div>
+      <div style="width:120px;background:#f0f0ee;border-radius:6px;height:8px;overflow:hidden;"><div style="width:${p.score}%;height:100%;background:${color};"></div></div>
+      <div style="width:36px;text-align:right;font-size:12.5px;font-weight:700;color:${color};">${p.score}%</div>
+    </div>`;
+  }).join('');
+}
+
+// --- Hash-Routing fuer den Walkthrough auf index.html ---
+// Erlaubt Links wie KIGIR_Cockpit_Demo.html#nda oder #investor (springt zur Rolle/Zugangsstufe)
+function applyHashRoute() {
+  const hash = (location.hash || '').replace('#','');
+  if (!hash) return;
+  if (hash === 'investor') { setRole('investor'); return; }
+  if (hash === 'founder') { setRole('founder'); return; }
+  if (['public','contact','nda','shareholder'].includes(hash)) {
+    setRole('investor');
+    setAccess(hash);
+  }
+}
+document.addEventListener('DOMContentLoaded', () => { setAccess('public'); updateScoring(); applyHashRoute(); });
+window.addEventListener('hashchange', applyHashRoute);
 </script>
 </body>
 </html>
