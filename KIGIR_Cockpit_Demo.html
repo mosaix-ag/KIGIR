@@ -598,7 +598,7 @@ footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font
   <div class="card">
     <div class="card-label">KI-Investor-Update – Entwurf generieren</div>
     <p style="font-size:12.5px;color:#666;margin:6px 0 10px;">Erstellt einen Update-Entwurf direkt aus den oben gezeigten KPIs. Governance-Regel: Jeder Entwurf wird vor Versand von der Gründerin oder dem Gründer geprüft, individualisiert und freigegeben – kein automatisierter Versand (Kapitel 6.4, Kriterium b).</p>
-    <button class="cta-btn" style="margin-bottom:0;" onclick="generateUpdate()">📝 Quartals-Update generieren (KI-Entwurf)</button>
+    <button class="cta-btn" style="margin-bottom:0;" id="ki-update-btn" onclick="generateUpdate()">📝 Quartals-Update generieren (KI-Entwurf)</button>
     <div id="ki-update-output" style="display:none;margin-top:14px;padding:14px 16px;background:#f8f8f6;border-radius:8px;border-left:4px solid #1F4E79;font-size:12.5px;line-height:1.7;color:#333;">
       <div style="font-weight:700;color:#1F4E79;margin-bottom:6px;">Betreff: HealthFlow AG – Update Q2 2026</div>
       «Liebe Investorinnen und Investoren, im zweiten Quartal 2026 ist der MRR von CHF 7.2k auf CHF 12.3k gestiegen (+71% seit Januar), getragen von 5 neuen Praxen (neu 23 aktive Kunden, Churn weiterhin 0%). Die LTV/CAC-Ratio liegt bei 4.4×, deutlich über unserem Zielwert von 3×. Die Series-A-Runde steht bei CHF 380k von CHF 500k (76%), der Runway beträgt bei aktuellem Burn 14 Monate. Nächster Meilenstein: Abschluss Term Sheet Investor #4 bis 14.07.2026.»
@@ -610,7 +610,7 @@ footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font
   <div class="card">
     <div class="card-label">KI-Konsistenzprüfung – Master-Narrativ vs. Pitch-Unterlagen</div>
     <p style="font-size:12.5px;color:#666;margin:6px 0 10px;">Gleicht das Master-Narrativ (Single Source of Truth, Kapitel 6.1) automatisch mit abgeleiteten Unterlagen ab und markiert Abweichungen, bevor sie Investorinnen und Investoren erreichen.</p>
-    <button class="cta-btn" style="margin-bottom:0;" onclick="runConsistencyCheck()">🔍 Konsistenz prüfen</button>
+    <button class="cta-btn" style="margin-bottom:0;" id="consistency-btn" onclick="runConsistencyCheck()">🔍 Konsistenz prüfen</button>
     <div id="consistency-output" style="display:none;margin-top:14px;">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
         <div style="background:#f8f8f6;border-radius:8px;padding:12px 14px;">
@@ -1366,10 +1366,18 @@ function showMgmtDialogDemo() {
 
 // --- KI live erlebbar (PoC-Ergaenzung) ---
 function generateUpdate() {
-  document.getElementById('ki-update-output').style.display = 'block';
+  const out = document.getElementById('ki-update-output');
+  const btn = document.getElementById('ki-update-btn');
+  const open = out.style.display === 'block';
+  out.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? '📝 Quartals-Update generieren (KI-Entwurf)' : '📝 Entwurf ausblenden';
 }
 function runConsistencyCheck() {
-  document.getElementById('consistency-output').style.display = 'block';
+  const out = document.getElementById('consistency-output');
+  const btn = document.getElementById('consistency-btn');
+  const open = out.style.display === 'block';
+  out.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? '🔍 Konsistenz prüfen' : '🔍 Prüfung ausblenden';
 }
 
 // --- Investor-Scoring, Phase 2 (PoC-Ergaenzung) ---
