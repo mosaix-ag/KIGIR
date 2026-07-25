@@ -42,9 +42,12 @@
   .field { display: flex; flex-direction: column; gap: 4px; }
   .field.full { grid-column: 1 / -1; }
   .field label { font-size: 12px; font-weight: 600; color: #444; }
-  .field input, .field textarea { font-family: inherit; font-size: 13px; padding: 8px 10px; border: 1.5px solid #ddd; border-radius: 8px; color: #222; resize: vertical; }
-  .field input:focus, .field textarea:focus { outline: none; border-color: #1F4E79; }
+  .field input, .field textarea, .field select { font-family: inherit; font-size: 13px; padding: 8px 10px; border: 1.5px solid #ddd; border-radius: 8px; color: #222; resize: vertical; background: #fff; }
+  .field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: #1F4E79; }
   .field textarea { min-height: 54px; }
+
+  .mailto-btn { display: block; width: 100%; font-size: 13px; font-weight: 600; color: #1F4E79; background: #fff; border: 1.5px solid #1F4E79; border-radius: 10px; padding: 10px; margin-top: 12px; cursor: pointer; }
+  .mailto-btn:hover { background: #eef4fb; }
 
   /* ACCESS LEVEL SELECTOR */
   .level-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
@@ -95,7 +98,7 @@
       <h1>KI-Update-Generator</h1>
       <div class="subtitle">Live-Anbindung an eine echte KI-Schnittstelle: Aus Kennzahlen und Stichworten entsteht ein Investoren-Update-Entwurf — abgestuft nach Zugriffsstufe.</div>
     </div>
-    <div class="meta-badge">Version 1.0<br>Stand: 25.07.2026</div>
+    <div class="meta-badge">Version 1.1<br>Stand: 25.07.2026</div>
   </div>
 
   <div class="live-badge"><span class="live-dot"></span> LIVE-DEMO · ECHTE KI-ANBINDUNG</div>
@@ -151,6 +154,31 @@
       </div>
     </div>
 
+    <div class="section-label">Empfänger &amp; Stil</div>
+    <div class="form-card">
+      <div class="form-grid">
+        <div class="field full">
+          <label for="investorName">Name Investor (optional — für persönliche Anrede)</label>
+          <input type="text" id="investorName" placeholder="z.B. Frau Meier / Herr Duval (leer lassen für generische Anrede)">
+        </div>
+        <div class="field">
+          <label for="tone">Tonalität</label>
+          <select id="tone">
+            <option value="formell">Formell</option>
+            <option value="persoenlich">Persönlich</option>
+            <option value="kurz">Kurz &amp; knapp</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="language">Sprache</label>
+          <select id="language">
+            <option value="de">Deutsch</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <div class="section-label">Zugriffsstufe (bestimmt Detailtiefe des Entwurfs)</div>
     <div class="level-row">
       <div class="level-btn" data-level="nach_erstkontakt" onclick="selectLevel(this)">Nach Erstkontakt</div>
@@ -168,6 +196,7 @@
     <div class="output-label">KI-Entwurf</div>
     <div class="output-text" id="outputText"></div>
     <div class="governance-note">⚠ KI-Entwurf — vor Versand von einer Person zu prüfen, zu individualisieren und freizugeben (kein automatisierter Versand). Vgl. Governance-Leitplanken, Kapitel 6.</div>
+    <button class="mailto-btn" id="mailtoBtn" onclick="openMailDraft()">✉ Als E-Mail-Entwurf öffnen (zur Prüfung, nicht automatisch versendet)</button>
     <div class="remaining-note" id="remainingNote"></div>
   </div>
 
@@ -186,6 +215,8 @@
     nach_nda: 'Vollständige Zahlen, aber Herausforderungen zurückhaltender formuliert, kein konkreter "Ask".',
     bestehender_investor: 'Volle Transparenz: alle Kennzahlen, ehrliche Herausforderungen, konkreter "Ask".',
   };
+
+  let lastDraft = "";
 
   function selectLevel(el) {
     document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
@@ -219,6 +250,9 @@
       ask: document.getElementById('ask').value,
       goals: document.getElementById('goals').value,
       accessLevel: level,
+      tone: document.getElementById('tone').value,
+      language: document.getElementById('language').value,
+      investorName: document.getElementById('investorName').value,
     };
 
     btn.disabled = true;
@@ -238,6 +272,7 @@
         return;
       }
 
+      lastDraft = data.draft;
       document.getElementById('outputText').textContent = data.draft;
       document.getElementById('remainingNote').textContent = data.remainingToday !== undefined
         ? `Noch ${data.remainingToday} Generierungen heute verfügbar (Demo-Tageslimit).`
@@ -250,6 +285,22 @@
       btn.disabled = false;
       btn.textContent = 'Update-Entwurf generieren';
     }
+  }
+
+  function openMailDraft() {
+    if (!lastDraft) return;
+    // Erste Zeile "Betreff: ..." als E-Mail-Betreff extrahieren, Rest als Body
+    const lines = lastDraft.split('\n');
+    let subject = 'Investoren-Update HealthFlow AG';
+    let bodyLines = lines;
+    const subjectMatch = lastDraft.match(/^\**\s*Betreff:\s*(.+?)\**\s*$/mi);
+    if (subjectMatch) {
+      subject = subjectMatch[1].trim();
+      bodyLines = lines.filter(l => !/^\**\s*Betreff:/i.test(l));
+    }
+    const body = bodyLines.join('\n').replace(/\*\*/g, '').trim();
+    const mailto = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailto;
   }
 </script>
 </body>
