@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KIGIR-Update-Generator | Christoph Ottiger</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; background: #f5f5f3; color: #222; min-height: 100vh; padding: 2rem 1rem; line-height: 1.5; }
+  .container { max-width: 820px; margin: 0 auto; }
+
+  /* NAV */
+  .sitenav-bar { display: flex; align-items: center; gap: 10px; background: #eef4fb; border: 1px solid #d5e3f5; border-radius: 10px; padding: 10px 16px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+  .sitenav-icon { font-size: 14px; }
+  .sitenav-label { font-size: 10.5px; font-weight: 700; color: #5b7a9e; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+  .sitenav-links { display: flex; gap: 4px; flex-wrap: wrap; }
+  .sitenav-links a { font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 20px; text-decoration: none; color: #1F4E79; background: transparent; transition: all 0.15s; }
+  .sitenav-links a:hover { background: rgba(31,78,121,0.08); }
+  .sitenav-links a.active { background: #1F4E79; color: #fff; cursor: default; pointer-events: none; }
+
+  /* HEADER */
+  .title-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 0.75rem; }
+  h1 { font-size: 21px; font-weight: 700; color: #1F4E79; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #666; max-width: 560px; }
+  .meta-badge { font-size: 11px; color: #fff; background: #1F4E79; padding: 6px 12px; border-radius: 8px; text-align: right; line-height: 1.4; white-space: nowrap; }
+
+  .live-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #fff; background: #1D9E75; padding: 6px 14px; border-radius: 20px; margin-bottom: 1.25rem; }
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #fff; animation: pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+  .onboard-box { background: #fff; border: 1px solid #ddd; border-left: 4px solid #1D9E75; border-radius: 8px; padding: 14px 16px; margin-bottom: 1.5rem; }
+  .onboard-title { font-size: 13px; font-weight: 700; color: #147A5A; margin-bottom: 6px; }
+  .onboard-box p { font-size: 13px; color: #444; margin-bottom: 6px; }
+  .onboard-box p:last-child { margin-bottom: 0; }
+
+  .section-label { font-size: 11px; font-weight: 700; color: #999; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* FORM */
+  .form-card { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.25rem; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-size: 12px; font-weight: 600; color: #444; }
+  .field input, .field textarea { font-family: inherit; font-size: 13px; padding: 8px 10px; border: 1.5px solid #ddd; border-radius: 8px; color: #222; resize: vertical; }
+  .field input:focus, .field textarea:focus { outline: none; border-color: #1F4E79; }
+  .field textarea { min-height: 54px; }
+
+  /* ACCESS LEVEL SELECTOR */
+  .level-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+  .level-btn { flex: 1; min-width: 150px; font-size: 12.5px; font-weight: 600; padding: 10px 12px; border: 1.5px solid #ccc; border-radius: 10px; cursor: pointer; background: #fff; color: #555; text-align: center; transition: all 0.15s; }
+  .level-btn:hover { border-color: #1F4E79; }
+  .level-btn.active { background: #1F4E79; color: #fff; border-color: #1F4E79; }
+  .level-hint { font-size: 11.5px; color: #888; font-style: italic; margin-bottom: 16px; }
+
+  .generate-btn { display: block; width: 100%; font-size: 14px; font-weight: 700; color: #fff; background: #1D9E75; border: none; border-radius: 10px; padding: 13px; cursor: pointer; transition: background 0.15s; }
+  .generate-btn:hover { background: #17835F; }
+  .generate-btn:disabled { background: #aac9bd; cursor: not-allowed; }
+
+  /* OUTPUT */
+  .output-card { background: #fff; border: 1.5px solid #1D9E75; border-radius: 12px; padding: 1.25rem; margin-top: 1.25rem; display: none; }
+  .output-card.visible { display: block; }
+  .output-label { font-size: 11px; font-weight: 700; color: #147A5A; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+  .output-text { font-size: 13.5px; color: #222; white-space: pre-wrap; line-height: 1.6; margin-bottom: 12px; }
+  .governance-note { font-size: 12px; color: #7a5c00; background: #FFF6DD; border: 1px solid #F0DFA0; border-radius: 8px; padding: 10px 12px; }
+  .remaining-note { font-size: 11px; color: #999; margin-top: 10px; text-align: right; }
+
+  .error-box { background: #FDECEC; border: 1px solid #F3B7B7; color: #8A2323; border-radius: 8px; padding: 12px 14px; margin-top: 1rem; font-size: 13px; display: none; }
+  .error-box.visible { display: block; }
+
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; margin-right: 8px; vertical-align: -2px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .fictive-note { background: #fff; border: 1px solid #ddd; border-left: 4px solid #F0C98A; border-radius: 8px; padding: 12px 14px; font-size: 12.5px; color: #555; margin-top: 1.5rem; }
+
+  footer { text-align: center; font-size: 11.5px; color: #999; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #ddd; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="sitenav-bar">
+    <span class="sitenav-icon">🧭</span>
+    <span class="sitenav-label">Navigation</span>
+    <div class="sitenav-links">
+      <a href="index.html">Übersicht</a>
+      <a href="KIGIR_Framework.html">KIGIR-Framework</a>
+      <a href="KIGIR_Cockpit_Demo.html">KIGIR-Cockpit</a>
+      <a href="KIGIR_Update_Generator.html" class="active">KI-Update-Generator</a>
+    </div>
+  </div>
+
+  <div class="title-row">
+    <div>
+      <h1>KI-Update-Generator</h1>
+      <div class="subtitle">Live-Anbindung an eine echte KI-Schnittstelle: Aus Kennzahlen und Stichworten entsteht ein Investoren-Update-Entwurf — abgestuft nach Zugriffsstufe.</div>
+    </div>
+    <div class="meta-badge">Version 1.0<br>Stand: 25.07.2026</div>
+  </div>
+
+  <div class="live-badge"><span class="live-dot"></span> LIVE-DEMO · ECHTE KI-ANBINDUNG</div>
+
+  <div class="onboard-box">
+    <div class="onboard-title">Was hier anders ist als bei KIGIR-Framework und KIGIR-Cockpit</div>
+    <p>Die beiden anderen Tools zeigen simulierte, fest hinterlegte Beispieldaten — bewusst so gekennzeichnet, ohne Backend-Anbindung. Dieses Tool hier ruft dagegen tatsächlich, in Echtzeit, eine KI-Schnittstelle auf. Was du unten eingibst, wird an ein Sprachmodell geschickt, das daraus einen echten Textentwurf erzeugt — kein Beispieltext.</p>
+    <p>Das demonstriert einen ersten konkreten Schritt in Richtung der Backend-Anbindung, die im Ausblick (Kapitel 7) als nächster Entwicklungsschritt benannt wird.</p>
+  </div>
+
+  <div class="section-label">Kennzahlen &amp; Stichworte (HealthFlow AG, fiktive Beispieldaten — änderbar)</div>
+  <div class="form-card">
+    <div class="form-grid">
+      <div class="field">
+        <label for="mrr">MRR (Monthly Recurring Revenue)</label>
+        <input type="text" id="mrr" value="CHF 12.3k">
+      </div>
+      <div class="field">
+        <label for="arr">ARR (Annual Recurring Revenue)</label>
+        <input type="text" id="arr" value="CHF 148k">
+      </div>
+      <div class="field">
+        <label for="cash">Cash-Bestand</label>
+        <input type="text" id="cash" value="CHF 310k">
+      </div>
+      <div class="field">
+        <label for="burnRate">Burn-Rate / Monat</label>
+        <input type="text" id="burnRate" value="CHF 42k">
+      </div>
+      <div class="field full">
+        <label for="growthYoY">Wachstum ggü. Vorjahr</label>
+        <input type="text" id="growthYoY" value="+34% ARR, 23 aktive Kunden (+5 im Quartal)">
+      </div>
+      <div class="field full">
+        <label for="highlights">Highlights &amp; Erfolge (2–3 Meilensteine)</label>
+        <textarea id="highlights">Neue Integration mit Praxissoftware live; erste Family-Office-Zusage (CHF 75k, Term Sheet in Unterzeichnung); CSAT auf 8.2/10 gestiegen.</textarea>
+      </div>
+      <div class="field full">
+        <label for="challenges">Herausforderungen &amp; Learnings</label>
+        <textarea id="challenges">Sales-Zyklus mit Praxen dauert länger als geplant (Beschaffungsprozesse); Onboarding-Aufwand pro Kunde wird reduziert durch neues Self-Service-Setup.</textarea>
+      </div>
+      <div class="field full">
+        <label for="teamUpdates">Team-Updates</label>
+        <textarea id="teamUpdates">Neue Person im Customer Success ab August; offene Schlüsselposition: Senior Sales (B2B Healthtech).</textarea>
+      </div>
+      <div class="field full">
+        <label for="ask">Der "Ask"</label>
+        <textarea id="ask">Suchen 2 weitere Investoren für die laufende Runde (Ticketgrösse CHF 30–50k); Introductions zu Family Offices im Gesundheitsbereich willkommen.</textarea>
+      </div>
+      <div class="field full">
+        <label for="goals">Ziele nächste Periode</label>
+        <textarea id="goals">Runde abschliessen (CHF 500k); 5 neue Praxen onboarden; Pilotgespräch mit erstem Spitalverbund starten.</textarea>
+      </div>
+    </div>
+
+    <div class="section-label">Zugriffsstufe (bestimmt Detailtiefe des Entwurfs)</div>
+    <div class="level-row">
+      <div class="level-btn" data-level="nach_erstkontakt" onclick="selectLevel(this)">Nach Erstkontakt</div>
+      <div class="level-btn" data-level="nach_nda" onclick="selectLevel(this)">Nach NDA</div>
+      <div class="level-btn active" data-level="bestehender_investor" onclick="selectLevel(this)">Bestehender Investor</div>
+    </div>
+    <div class="level-hint" id="levelHint">Volle Transparenz: alle Kennzahlen, ehrliche Herausforderungen, konkreter "Ask".</div>
+
+    <button class="generate-btn" id="generateBtn" onclick="generateUpdate()">Update-Entwurf generieren</button>
+  </div>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <div class="output-card" id="outputCard">
+    <div class="output-label">KI-Entwurf</div>
+    <div class="output-text" id="outputText"></div>
+    <div class="governance-note">⚠ KI-Entwurf — vor Versand von einer Person zu prüfen, zu individualisieren und freizugeben (kein automatisierter Versand). Vgl. Governance-Leitplanken, Kapitel 6.</div>
+    <div class="remaining-note" id="remainingNote"></div>
+  </div>
+
+  <div class="fictive-note">💡 HealthFlow AG ist ein fiktives Referenzunternehmen, das ausschliesslich zur Illustration des Frameworks dient. Die generierte KI-Antwort ist jedoch keine Simulation — sie entsteht live und kann bei jedem Aufruf leicht unterschiedlich ausfallen.</div>
+
+  <footer>KIGIR – KI-gestützte Investor Relations · Christoph Ottiger · Transferthesis CAS HSG DIBT 11</footer>
+
+</div>
+
+<script>
+  // Cloudflare-Worker-Endpunkt hier eintragen, sobald deployed:
+  const API_ENDPOINT = "https://kigir-update-generator.YOUR-SUBDOMAIN.workers.dev";
+
+  const levelHints = {
+    nach_erstkontakt: 'Nur Headline-Info: Wachstums-Highlights, keine internen Kennzahlen, keine Herausforderungen, kein "Ask".',
+    nach_nda: 'Vollständige Zahlen, aber Herausforderungen zurückhaltender formuliert, kein konkreter "Ask".',
+    bestehender_investor: 'Volle Transparenz: alle Kennzahlen, ehrliche Herausforderungen, konkreter "Ask".',
+  };
+
+  function selectLevel(el) {
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('levelHint').textContent = levelHints[el.dataset.level];
+  }
+
+  async function generateUpdate() {
+    const btn = document.getElementById('generateBtn');
+    const errorBox = document.getElementById('errorBox');
+    const outputCard = document.getElementById('outputCard');
+    errorBox.classList.remove('visible');
+    outputCard.classList.remove('visible');
+
+    if (API_ENDPOINT.includes("YOUR-SUBDOMAIN")) {
+      errorBox.textContent = "Der Worker-Endpunkt ist noch nicht eingetragen (API_ENDPOINT in dieser Datei). Sobald der Cloudflare Worker deployed ist, die *.workers.dev-URL hier oben eintragen.";
+      errorBox.classList.add('visible');
+      return;
+    }
+
+    const level = document.querySelector('.level-btn.active').dataset.level;
+    const payload = {
+      mrr: document.getElementById('mrr').value,
+      arr: document.getElementById('arr').value,
+      cash: document.getElementById('cash').value,
+      burnRate: document.getElementById('burnRate').value,
+      growthYoY: document.getElementById('growthYoY').value,
+      highlights: document.getElementById('highlights').value,
+      challenges: document.getElementById('challenges').value,
+      teamUpdates: document.getElementById('teamUpdates').value,
+      ask: document.getElementById('ask').value,
+      goals: document.getElementById('goals').value,
+      accessLevel: level,
+    };
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Wird generiert…';
+
+    try {
+      const res = await fetch(API_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        errorBox.textContent = data.error || 'Unbekannter Fehler bei der Generierung.';
+        errorBox.classList.add('visible');
+        return;
+      }
+
+      document.getElementById('outputText').textContent = data.draft;
+      document.getElementById('remainingNote').textContent = data.remainingToday !== undefined
+        ? `Noch ${data.remainingToday} Generierungen heute verfügbar (Demo-Tageslimit).`
+        : '';
+      outputCard.classList.add('visible');
+    } catch (err) {
+      errorBox.textContent = 'Verbindung zur KI-Schnittstelle fehlgeschlagen: ' + err.message;
+      errorBox.classList.add('visible');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Update-Entwurf generieren';
+    }
+  }
+</script>
+</body>
+</html>

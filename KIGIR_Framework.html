@@ -168,6 +168,7 @@
       <a href="index.html">Übersicht</a>
       <a href="KIGIR_Framework.html" class="active">KIGIR-Framework</a>
       <a href="KIGIR_Cockpit_Demo.html">KIGIR-Cockpit</a>
+      <a href="KIGIR_Update_Generator.html">KI-Update-Generator</a>
     </div>
   </div>
 
@@ -553,6 +554,20 @@ function showTab(name, el) {
   });
   document.getElementById('tab-'+name).classList.add('visible');
 }
+
+// --- Hash-Routing fuer den Walkthrough auf index.html ---
+// Erlaubt Links wie KIGIR_Framework.html#phase-1 (springt direkt zur Phase und oeffnet sie)
+function applyHashRoute() {
+  const hash = (location.hash || '').replace('#','');
+  const m = hash.match(/^phase-([1-4])$/);
+  if (m) {
+    const n = m[1];
+    showPhase(n, document.getElementById('pc'+n));
+    document.getElementById('pc'+n).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+document.addEventListener('DOMContentLoaded', applyHashRoute);
+window.addEventListener('hashchange', applyHashRoute);
 
 const data = {
   'notion-master': {
