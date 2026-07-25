@@ -310,14 +310,14 @@
 
   function openMailDraft() {
     if (!lastDraft) return;
-    // Erste Zeile "Betreff: ..." als E-Mail-Betreff extrahieren, Rest als Body
+    // Erste Zeile "Betreff: ..." (DE) oder "Subject: ..." (EN) als E-Mail-Betreff extrahieren, Rest als Body
     const lines = lastDraft.split('\n');
     let subject = 'Investoren-Update HealthFlow AG';
     let bodyLines = lines;
-    const subjectMatch = lastDraft.match(/^\**\s*Betreff:\s*(.+?)\**\s*$/mi);
+    const subjectMatch = lastDraft.match(/^\**\s*(?:Betreff|Subject):\s*(.+?)\**\s*$/mi);
     if (subjectMatch) {
       subject = subjectMatch[1].trim();
-      bodyLines = lines.filter(l => !/^\**\s*Betreff:/i.test(l));
+      bodyLines = lines.filter(l => !/^\**\s*(?:Betreff|Subject):/i.test(l));
     }
     const body = bodyLines.join('\n').replace(/\*\*/g, '').trim();
     const mailto = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
