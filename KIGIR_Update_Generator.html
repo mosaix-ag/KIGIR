@@ -46,8 +46,11 @@
   .field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: #1F4E79; }
   .field textarea { min-height: 54px; }
 
-  .mailto-btn { display: block; width: 100%; font-size: 13px; font-weight: 600; color: #1F4E79; background: #fff; border: 1.5px solid #1F4E79; border-radius: 10px; padding: 10px; margin-top: 12px; cursor: pointer; }
+  .action-row { display: flex; gap: 8px; margin-top: 12px; }
+  .mailto-btn { flex: 1; font-size: 13px; font-weight: 600; color: #1F4E79; background: #fff; border: 1.5px solid #1F4E79; border-radius: 10px; padding: 10px; cursor: pointer; }
   .mailto-btn:hover { background: #eef4fb; }
+  .copy-btn { flex: 1; font-size: 13px; font-weight: 600; color: #fff; background: #1F4E79; border: 1.5px solid #1F4E79; border-radius: 10px; padding: 10px; cursor: pointer; }
+  .copy-btn:hover { background: #163a5c; }
 
   /* ACCESS LEVEL SELECTOR */
   .level-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
@@ -196,7 +199,10 @@
     <div class="output-label">KI-Entwurf</div>
     <div class="output-text" id="outputText"></div>
     <div class="governance-note">⚠ KI-Entwurf — vor Versand von einer Person zu prüfen, zu individualisieren und freizugeben (kein automatisierter Versand). Vgl. Governance-Leitplanken, Kapitel 6.</div>
-    <button class="mailto-btn" id="mailtoBtn" onclick="openMailDraft()">✉ Als E-Mail-Entwurf öffnen (zur Prüfung, nicht automatisch versendet)</button>
+    <div class="action-row">
+      <button class="copy-btn" id="copyBtn" onclick="copyDraft()">📋 In Zwischenablage kopieren</button>
+      <button class="mailto-btn" id="mailtoBtn" onclick="openMailDraft()">✉ Als E-Mail öffnen (falls Mailprogramm eingerichtet)</button>
+    </div>
     <div class="remaining-note" id="remainingNote"></div>
   </div>
 
@@ -284,6 +290,21 @@
     } finally {
       btn.disabled = false;
       btn.textContent = 'Update-Entwurf generieren';
+    }
+  }
+
+  async function copyDraft() {
+    if (!lastDraft) return;
+    const btn = document.getElementById('copyBtn');
+    const cleanText = lastDraft.replace(/\*\*/g, '');
+    try {
+      await navigator.clipboard.writeText(cleanText);
+      const original = btn.textContent;
+      btn.textContent = '✓ Kopiert!';
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    } catch (err) {
+      btn.textContent = '✗ Kopieren fehlgeschlagen — Text manuell markieren';
+      setTimeout(() => { btn.textContent = '📋 In Zwischenablage kopieren'; }, 2500);
     }
   }
 
