@@ -438,14 +438,14 @@ footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font
 <div class="title-row">
   <div>
     <h1>KIGIR-Cockpit – Demoversion</h1>
-    <div class="subtitle">Gründer-Cockpit &amp; Investor-Portal – Phasen 2 bis 4 des KIGIR-Frameworks · <strong>HealthFlow AG</strong> (fiktives Referenzstartup)</div>
+    <div class="subtitle">Gründer-Cockpit &amp; Investor-Portal – Nutzeroberflächen aus Phase 1 und 4 des KIGIR-Frameworks · <strong>HealthFlow AG</strong> (fiktives Referenzstartup)</div>
   </div>
   <div class="meta-badge">Version 2.1<br>Stand: 24.07.2026</div>
 </div>
 
 <div class="onboard-box">
   <div class="onboard-title">So funktioniert diese Demo</div>
-  <p>Zwei Rollen – eine Datenbasis. <strong>Gründer-Cockpit</strong> (intern): Ampel-Status, Fundraising-Pipeline, vollständige Business-KPIs mit MRR-Trend, Kunden-Akquise-Funnel und Blocker-Dashboard. <strong>Investor-Portal</strong> (extern): drei progressive Zugangsstufen – Schaufenster (öffentlich), Teaser-Level (nach Erstkontakt) und Deep-Dive-Datenraum (nach NDA). Die Zugangsstufen simulieren, wie viel Information je nach Beziehungsstand sichtbar ist.</p>
+  <p>Zwei Rollen – eine Datenbasis. <strong>Gründer-Cockpit</strong> (intern): Ampel-Status, Fundraising-Pipeline, vollständige Business-KPIs mit MRR-Trend, Kunden-Akquise-Funnel und Blocker-Dashboard. <strong>Investor-Portal</strong> (extern): vier progressive Zugangsstufen – Schaufenster (öffentlich), Teaser-Level (nach Erstkontakt), Deep-Dive-Datenraum (nach NDA) und persönliches Aktionärs-Portal (bestehender Investor). Die Zugangsstufen simulieren, wie viel Information je nach Beziehungsstand sichtbar ist.</p>
   <p class="clickhint">🖱 Klickbar: Rollen-Umschalter · Zugriffsstufen-Regler (inkl. neu: «Aktionär») · «ℹ️ Erklärung»-Links bei KPIs · News-Tabs · Dialog-Tabs · GV-Dokument-Aktionen · Benachrichtigungs-Optionen · FAQ-Akkordeon · CTA-Buttons</p>
   <p class="fictive-note">Alle Zahlen, Namen und Dokumente sind fiktiv – ausschliesslich zur Illustration des Frameworks.</p>
 </div>
@@ -598,7 +598,7 @@ footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font
   <!-- KI-UPDATE-GENERATOR (macht Phase-4-KI-Nutzen erlebbar statt nur beschrieben) -->
   <div class="card">
     <div class="card-label">KI-Investor-Update – Entwurf generieren</div>
-    <p style="font-size:12.5px;color:#666;margin:6px 0 10px;">Simulierter Vorschau-Entwurf (fest hinterlegter Beispieltext, keine Live-Generierung), aufgebaut aus den oben gezeigten KPIs. Governance-Regel: Jeder Entwurf wird vor Versand von der Gründerin oder dem Gründer geprüft, individualisiert und freigegeben – kein automatisierter Versand (Kapitel 6.4, Kriterium b).</p>
+    <p style="font-size:12.5px;color:#666;margin:6px 0 10px;">Simulierter Vorschau-Entwurf (fest hinterlegter Beispieltext, keine Live-Generierung), aufgebaut aus den oben gezeigten KPIs. Governance-Regel: Jeder Entwurf wird vor Versand von der Gründerin oder dem Gründer geprüft, individualisiert und freigegeben – kein automatisierter Versand (vgl. Governance-Leitplanken, Kapitel 6).</p>
     <button class="cta-btn" style="margin-bottom:0;" id="ki-update-btn" onclick="generateUpdate()">📝 Quartals-Update generieren (KI-Entwurf)</button>
     <div id="ki-update-output" style="display:none;margin-top:14px;padding:14px 16px;background:#f8f8f6;border-radius:8px;border-left:4px solid #1F4E79;font-size:12.5px;line-height:1.7;color:#333;">
       <div style="font-weight:700;color:#1F4E79;margin-bottom:6px;">Betreff: HealthFlow AG – Update Q2 2026</div>
@@ -610,7 +610,7 @@ footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font
   <!-- KI-KONSISTENZPRUEFUNG (macht Phase-1/4-KI-Nutzen erlebbar statt nur beschrieben) -->
   <div class="card">
     <div class="card-label">KI-Konsistenzprüfung – Master-Narrativ vs. Pitch-Unterlagen</div>
-    <p style="font-size:12.5px;color:#666;margin:6px 0 10px;">Gleicht das Master-Narrativ (Single Source of Truth, Kapitel 6.1) automatisch mit abgeleiteten Unterlagen ab und markiert Abweichungen, bevor sie Investorinnen und Investoren erreichen.</p>
+    <p style="font-size:12.5px;color:#666;margin:6px 0 10px;">Gleicht das Master-Narrativ (Single Source of Truth, Kapitel 5) automatisch mit abgeleiteten Unterlagen ab und markiert Abweichungen, bevor sie Investorinnen und Investoren erreichen.</p>
     <button class="cta-btn" style="margin-bottom:0;" id="consistency-btn" onclick="runConsistencyCheck()">🔍 Konsistenz prüfen</button>
     <div id="consistency-output" style="display:none;margin-top:14px;">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
@@ -715,7 +715,7 @@ footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font
   <!-- INVESTOR-SCORING (schliesst die Phase-2-Luecke im Cockpit) -->
   <div class="card">
     <div class="card-label">Investor-Scoring – Phase 2: Identifikation &amp; Qualifizierung</div>
-    <p style="font-size:12.5px;color:#666;margin:6px 0 12px;">Gewichtet eine Shortlist potenzieller Investorinnen und Investoren nach vier Kriterien zu einem Match-Score. Ergebnis ist eine priorisierte Liste, keine automatisierte Kontaktaufnahme (Kapitel 6.4).</p>
+    <p style="font-size:12.5px;color:#666;margin:6px 0 12px;">Gewichtet eine Shortlist potenzieller Investorinnen und Investoren nach vier Kriterien zu einem Match-Score. Ergebnis ist eine priorisierte Liste, keine automatisierte Kontaktaufnahme (vgl. Kapitel 6).</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;margin-bottom:14px;">
       <div>
         <div style="display:flex;justify-content:space-between;font-size:12px;color:#555;margin-bottom:4px;"><span>Branchen-Fit (Health/Tech)</span><span id="w-branche-val">70%</span></div>
@@ -1272,7 +1272,7 @@ footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font
 
 <footer>
   KIGIR-Cockpit – Demoversion (HealthFlow AG) · Version 2.1 · Stand: 24.07.2026 · Christoph Ottiger · Transferthesis CAS HSG DIBT 11<br>
-  Zeigt die aus Phase 4 des <strong>KIGIR-Frameworks</strong> entstehenden Nutzeroberflächen. Alle Daten fiktiv.
+  Zeigt die aus Phase 1 und 4 des <strong>KIGIR-Frameworks</strong> entstehenden Nutzeroberflächen. Alle Daten fiktiv.
 </footer>
 </div>
 
