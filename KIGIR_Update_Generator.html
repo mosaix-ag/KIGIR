@@ -279,7 +279,7 @@
       }
 
       lastDraft = data.draft;
-      document.getElementById('outputText').textContent = data.draft;
+      document.getElementById('outputText').textContent = data.draft.replace(/\*\*/g, '');
       document.getElementById('remainingNote').textContent = data.remainingToday !== undefined
         ? `Noch ${data.remainingToday} Generierungen heute verfügbar (Demo-Tageslimit).`
         : '';
