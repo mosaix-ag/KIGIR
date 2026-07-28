@@ -738,6 +738,32 @@ footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font
     <p style="font-size:10.5px;color:#bbb;margin-top:8px;">Fiktive Profile zur Illustration · Score = gewichteter Durchschnitt der vier Reglerwerte je Profil</p>
   </div>
 
+  <!-- PITCH-READINESS-SCORE (Selbsteinschaetzung, Ausblick-Element aus Uebernickel-Konsultation, vgl. Kapitel 7.5) -->
+  <div class="card">
+    <div class="card-label">Pitch-Readiness-Score – Selbsteinschätzung vor der Ansprache der Investoren</div>
+    <p style="font-size:12.5px;color:#666;margin:6px 0 12px;">Schätzt die eigene Vorbereitungsarbeit anhand von vier Kriterien ein, bevor die Ansprache der Investoren erfolgt. Das Resultat ist eine Art Selbstreflexion der eigenen Arbeit.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;margin-bottom:14px;">
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#555;margin-bottom:4px;"><span>Konsistenz des Narrativs (Zahlen, Botschaften)</span><span id="pr-narrativ-val">60%</span></div>
+        <input type="range" min="0" max="100" value="60" id="pr-narrativ" oninput="updatePitchReadiness()" style="width:100%;">
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#555;margin-bottom:4px;"><span>Vollständigkeit des Datenraums (KPIs, Cap Table)</span><span id="pr-datenraum-val">80%</span></div>
+        <input type="range" min="0" max="100" value="80" id="pr-datenraum" oninput="updatePitchReadiness()" style="width:100%;">
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#555;margin-bottom:4px;"><span>Antworten auf Standardfragen (Cap Table, Bewertung, IP)</span><span id="pr-antworten-val">80%</span></div>
+        <input type="range" min="0" max="100" value="80" id="pr-antworten" oninput="updatePitchReadiness()" style="width:100%;">
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#555;margin-bottom:4px;"><span>Klarheit des Idealprofils (Branche, Ticket, Geografie)</span><span id="pr-idealprofil-val">65%</span></div>
+        <input type="range" min="0" max="100" value="65" id="pr-idealprofil" oninput="updatePitchReadiness()" style="width:100%;">
+      </div>
+    </div>
+    <div id="pitch-readiness-result"></div>
+    <p style="font-size:10.5px;color:#bbb;margin-top:8px;">Selbsteinschätzung · Score = Durchschnitt der vier Reglerwerte</p>
+  </div>
+
   <!-- DIREKTER DIALOG (Management-Ansicht) -->
   <div class="card">
     <div class="card-label">Direkter Dialog – Management ↔ Investoren</div>
@@ -1414,6 +1440,38 @@ function updateScoring() {
   }).join('');
 }
 
+// --- Pitch-Readiness-Score (Selbsteinschaetzung, vgl. Kapitel 7.5) ---
+const pitchReadinessDims = [
+  { id: 'pr-narrativ', shortLabel: 'Konsistenz des Narrativs' },
+  { id: 'pr-datenraum', shortLabel: 'Vollständigkeit des Datenraums' },
+  { id: 'pr-antworten', shortLabel: 'Antworten auf Standardfragen' },
+  { id: 'pr-idealprofil', shortLabel: 'Klarheit des Idealprofils' },
+];
+function updatePitchReadiness() {
+  const values = pitchReadinessDims.map(d => +document.getElementById(d.id).value);
+  pitchReadinessDims.forEach((d, i) => {
+    document.getElementById(d.id + '-val').textContent = values[i] + '%';
+  });
+  const avg = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
+  const color = avg >= 75 ? '#1D9E75' : avg >= 55 ? '#BA7517' : '#999';
+  const bandText = avg >= 75
+    ? 'Bereit für die aktive Ansprache der Investoren'
+    : avg >= 55
+      ? 'Grösstenteils bereit – noch einzelne Lücken schliessen vor Ansprache der Investoren'
+      : 'Vorbereitung braucht mehr Zeit vor der Ansprache der Investoren';
+  let minIdx = 0;
+  values.forEach((v, i) => { if (v < values[minIdx]) minIdx = i; });
+  document.getElementById('pitch-readiness-result').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;">
+      <div style="flex:1;font-size:12.5px;color:#333;font-weight:700;">Gesamt-Score</div>
+      <div style="width:120px;background:#f0f0ee;border-radius:6px;height:8px;overflow:hidden;"><div style="width:${avg}%;height:100%;background:${color};"></div></div>
+      <div style="width:36px;text-align:right;font-size:12.5px;font-weight:700;color:${color};">${avg}%</div>
+    </div>
+    <div style="font-size:12.5px;color:${color};font-weight:600;margin-top:4px;">${bandText}</div>
+    <div style="font-size:11.5px;color:#888;margin-top:4px;">Grösste Lücke: ${pitchReadinessDims[minIdx].shortLabel} (${values[minIdx]}%)</div>
+  `;
+}
+
 // --- Hash-Routing fuer den Walkthrough auf index.html ---
 // Erlaubt Links wie KIGIR_Cockpit_Demo.html#nda oder #investor (springt zur Rolle/Zugangsstufe)
 function applyHashRoute() {
@@ -1426,7 +1484,7 @@ function applyHashRoute() {
     setAccess(hash);
   }
 }
-document.addEventListener('DOMContentLoaded', () => { setAccess('public'); updateScoring(); applyHashRoute(); });
+document.addEventListener('DOMContentLoaded', () => { setAccess('public'); updateScoring(); updatePitchReadiness(); applyHashRoute(); });
 window.addEventListener('hashchange', applyHashRoute);
 </script>
 </body>
