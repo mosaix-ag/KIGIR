@@ -741,7 +741,7 @@ footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font
   </div>
 
   <!-- PITCH-READINESS-SCORE (Selbsteinschaetzung, Ausblick-Element aus Uebernickel-Konsultation, vgl. Kapitel 7.5) -->
-  <div class="card">
+  <div class="card" id="pitch-readiness-card">
     <div class="card-label">Pitch-Readiness-Score – Selbsteinschätzung vor der Ansprache der Investoren</div>
     <p style="font-size:12.5px;color:#666;margin:6px 0 12px;">Schätzt die eigene Vorbereitungsarbeit anhand von vier Kriterien ein, bevor die Ansprache der Investoren erfolgt. Das Resultat ist eine Art Selbstreflexion der eigenen Arbeit.</p>
     <p style="font-size:11px;color:#1F4E79;margin-bottom:10px;">🖱 Regler ziehen, um die eigene Einschätzung anzupassen — der Score unten aktualisiert sich live.</p>
@@ -1480,10 +1480,11 @@ function updatePitchReadiness() {
 function applyHashRoute() {
   const hash = (location.hash || '').replace('#','');
   if (!hash) return;
-  if (hash === 'investor-scoring') {
+  if (hash === 'investor-scoring' || hash === 'pitch-readiness') {
     setRole('founder');
+    const targetId = hash === 'investor-scoring' ? 'investor-scoring-card' : 'pitch-readiness-card';
     setTimeout(() => {
-      const el = document.getElementById('investor-scoring-card');
+      const el = document.getElementById(targetId);
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
     return;
