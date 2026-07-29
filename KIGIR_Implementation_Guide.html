@@ -435,6 +435,8 @@ function renderChips() {
   });
 }
 function askBot(question) {
+  const chat = document.getElementById('bot-chat');
+  chat.innerHTML = '';
   addBotMessage(question, 'user');
   const found = botQA.find(item => item.match.test(question));
   const answer = found ? found.a : "Demo: In der Live-Version würde hier eine KI-generierte Antwort erscheinen, gestützt auf die Kapitel 1–7 dieser Arbeit.";
