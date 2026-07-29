@@ -7,18 +7,18 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; background: #f5f5f3; color: #222; min-height: 100vh; padding: 2rem 1rem; line-height: 1.5; }
-.container { max-width: 980px; margin: 0 auto; }
+.container { max-width: 940px; margin: 0 auto; }
 
 .title-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 1rem; }
 h1 { font-size: 21px; font-weight: 700; color: #1F4E79; margin-bottom: 4px; }
 .subtitle { font-size: 13px; color: #666; }
-.meta-badge { font-size: 11px; color: #fff; background: #1F4E79; padding: 6px 12px; border-radius: 8px; text-align: right; line-height: 1.4; white-space: nowrap; }
+.meta-badge { font-size: 11px; color: #999; text-align: right; line-height: 1.4; white-space: nowrap; }
 
 .onboard-box { background: #fff; border: 1px solid #ddd; border-left: 4px solid #1F4E79; border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem; }
 .onboard-title { font-size: 13px; font-weight: 700; color: #1F4E79; margin-bottom: 6px; }
 .onboard-box p { font-size: 13px; color: #444; margin-bottom: 6px; }
 .clickhint { font-size: 12px !important; color: #777 !important; font-style: italic; margin-bottom: 0 !important; }
-.fictive-note { font-size: 11.5px !important; color: #bbb !important; font-style: italic; margin-bottom: 0 !important; }
+.fictive-note { background: #fff; border-left: 4px solid #1F4E79; border-radius: 8px; padding: 14px 16px; font-size: 12.5px; color: #555; margin-top: 20px; margin-bottom: 0; }
 
 .role-switch { display: flex; gap: 10px; margin-bottom: 1.5rem; }
 .role-btn { flex: 1; font-size: 14px; font-weight: 700; padding: 14px; border: 2px solid #ccc; border-radius: 10px; cursor: pointer; background: #fff; color: #555; transition: all 0.15s; text-align: center; }
@@ -441,13 +441,13 @@ footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font
     <h1>KIGIR-Cockpit – Demoversion</h1>
     <div class="subtitle">Gründer-Cockpit &amp; Investor-Portal – Nutzeroberflächen aus Phase 1 und 4 des KIGIR-Frameworks · <strong>HealthFlow AG</strong> (fiktives Referenzstartup)</div>
   </div>
-  <div class="meta-badge">Version 2.1<br>Stand: 24.07.2026</div>
+  <div class="meta-badge">Stand: 29.07.2026</div>
 </div>
 
 <div class="onboard-box">
   <div class="onboard-title">So funktioniert diese Demo</div>
   <p>Zwei Rollen – eine Datenbasis. <strong>Gründer-Cockpit</strong> (intern): Ampel-Status, Fundraising-Pipeline, vollständige Business-KPIs mit MRR-Trend, Kunden-Akquise-Funnel und Blocker-Dashboard. <strong>Investor-Portal</strong> (extern): vier progressive Zugangsstufen – Schaufenster (öffentlich), Teaser-Level (nach Erstkontakt), Deep-Dive-Datenraum (nach NDA) und persönliches Aktionärs-Portal (bestehender Investor). Die Zugangsstufen simulieren, wie viel Information je nach Beziehungsstand sichtbar ist.</p>
-  <p class="clickhint">🖱 Klickbar: Rollen-Umschalter · Zugriffsstufen-Regler (inkl. neu: «Aktionär») · «ℹ️ Erklärung»-Links bei KPIs · News-Tabs · Dialog-Tabs · GV-Dokument-Aktionen · Benachrichtigungs-Optionen · FAQ-Akkordeon · CTA-Buttons</p>
+  <p class="clickhint">🖱 Klickbar: Rollen-Umschalter · Zugriffsstufen-Regler (inkl. neu: «Aktionär») · Investor-Scoring- und Pitch-Readiness-Regler (ziehbar) · «ℹ️ Erklärung»-Links bei KPIs · News-Tabs · Dialog-Tabs · GV-Dokument-Aktionen · Benachrichtigungs-Optionen · FAQ-Akkordeon · CTA-Buttons</p>
   <p class="fictive-note">Alle Zahlen, Namen und Dokumente sind fiktiv – ausschliesslich zur Illustration des Frameworks.</p>
 </div>
 
@@ -714,9 +714,10 @@ footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font
   </div>
 
   <!-- INVESTOR-SCORING (schliesst die Phase-2-Luecke im Cockpit) -->
-  <div class="card">
+  <div class="card" id="investor-scoring-card">
     <div class="card-label">Investor-Scoring – Phase 2: Identifikation &amp; Qualifizierung</div>
     <p style="font-size:12.5px;color:#666;margin:6px 0 12px;">Gewichtet eine Shortlist potenzieller Investorinnen und Investoren nach vier Kriterien zu einem Match-Score. Ergebnis ist eine priorisierte Liste, keine automatisierte Kontaktaufnahme (vgl. Kapitel 6).</p>
+    <p style="font-size:11px;color:#1F4E79;margin-bottom:10px;">🖱 Regler ziehen, um die Gewichtung anzupassen — die Liste unten aktualisiert sich live.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;margin-bottom:14px;">
       <div>
         <div style="display:flex;justify-content:space-between;font-size:12px;color:#555;margin-bottom:4px;"><span>Branchen-Fit (Health/Tech)</span><span id="w-branche-val">70%</span></div>
@@ -743,6 +744,7 @@ footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font
   <div class="card">
     <div class="card-label">Pitch-Readiness-Score – Selbsteinschätzung vor der Ansprache der Investoren</div>
     <p style="font-size:12.5px;color:#666;margin:6px 0 12px;">Schätzt die eigene Vorbereitungsarbeit anhand von vier Kriterien ein, bevor die Ansprache der Investoren erfolgt. Das Resultat ist eine Art Selbstreflexion der eigenen Arbeit.</p>
+    <p style="font-size:11px;color:#1F4E79;margin-bottom:10px;">🖱 Regler ziehen, um die eigene Einschätzung anzupassen — der Score unten aktualisiert sich live.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;margin-bottom:14px;">
       <div>
         <div style="display:flex;justify-content:space-between;font-size:12px;color:#555;margin-bottom:4px;"><span>Konsistenz des Narrativs (Zahlen, Botschaften)</span><span id="pr-narrativ-val">60%</span></div>
@@ -1478,6 +1480,14 @@ function updatePitchReadiness() {
 function applyHashRoute() {
   const hash = (location.hash || '').replace('#','');
   if (!hash) return;
+  if (hash === 'investor-scoring') {
+    setRole('founder');
+    setTimeout(() => {
+      const el = document.getElementById('investor-scoring-card');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+    return;
+  }
   if (hash === 'investor') { setRole('investor'); return; }
   if (hash === 'founder') { setRole('founder'); return; }
   if (['public','contact','nda','shareholder'].includes(hash)) {
