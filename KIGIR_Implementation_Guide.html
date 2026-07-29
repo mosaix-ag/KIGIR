@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KIGIR – Implementation Guide | Christoph Ottiger</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; background: #f5f5f3; color: #222; min-height: 100vh; padding: 3rem 1rem; line-height: 1.5; }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  .title-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+  h1 { font-size: 26px; font-weight: 700; color: #1F4E79; margin-bottom: 8px; }
+  .subtitle { font-size: 14px; color: #666; max-width: 640px; }
+  .meta-badge { font-size: 11px; color: #fff; background: #1F4E79; padding: 6px 12px; border-radius: 8px; text-align: right; line-height: 1.4; white-space: nowrap; }
+  .jump-link { display: inline-block; font-size: 12.5px; color: #1F4E79; text-decoration: none; font-weight: 600; margin-bottom: 2rem; }
+  .jump-link:hover { text-decoration: underline; }
+
+  .sitenav-bar { display: flex; align-items: center; gap: 10px; background: #eef4fb; border: 1px solid #d5e3f5; border-radius: 10px; padding: 10px 16px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+  .sitenav-icon { font-size: 14px; }
+  .sitenav-label { font-size: 10.5px; font-weight: 700; color: #5b7a9e; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+  .sitenav-links { display: flex; gap: 4px; flex-wrap: wrap; }
+  .sitenav-links a { font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 20px; text-decoration: none; color: #1F4E79; background: transparent; transition: all 0.15s; }
+  .sitenav-links a:hover { background: rgba(31,78,121,0.08); }
+  .sitenav-links a.active { background: #1F4E79; color: #fff; cursor: default; pointer-events: none; }
+
+  .card { background: #fff; border: 1.5px solid #ddd; border-radius: 14px; padding: 1.75rem; margin-bottom: 2rem; }
+  .card-label { font-size: 11px; font-weight: 700; color: #1F4E79; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+
+  /* PHASEN-FLUSS */
+  .flow-row { display: flex; align-items: stretch; gap: 8px; margin-bottom: 2rem; flex-wrap: wrap; }
+  .flow-box { flex: 1; min-width: 150px; background: #fff; border: 1.5px solid #ddd; border-radius: 12px; padding: 14px 16px; }
+  .flow-phase { font-size: 10.5px; font-weight: 700; color: #1F4E79; text-transform: uppercase; margin-bottom: 4px; }
+  .flow-title { font-size: 13px; font-weight: 700; color: #111; margin-bottom: 6px; }
+  .flow-caption { font-size: 11px; color: #777; line-height: 1.5; }
+  .flow-arrow { display: flex; align-items: center; justify-content: center; font-size: 18px; color: #bbb; padding: 0 2px; }
+  @media (max-width: 720px) { .flow-row { flex-direction: column; } .flow-arrow { transform: rotate(90deg); padding: 4px 0; } }
+
+  /* GUIDE STEPS */
+  .guide-step { padding: 18px 0; border-bottom: 1px solid #eee; }
+  .guide-step:last-child { border-bottom: none; }
+  .guide-step-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+  .guide-phase-tag { font-size: 10.5px; font-weight: 700; color: #1F4E79; background: #eef4fb; border: 1px solid #d5e3f5; border-radius: 20px; padding: 3px 10px; white-space: nowrap; }
+  .guide-step-title { font-size: 15px; font-weight: 700; color: #111; }
+  .guide-time-badge { font-size: 11px; color: #888; white-space: nowrap; margin-left: auto; }
+  .guide-step-desc { font-size: 12.5px; color: #555; line-height: 1.6; margin-bottom: 10px; }
+  .guide-checklist { list-style: none; font-size: 12.5px; color: #333; line-height: 1.9; margin-bottom: 12px; }
+  .guide-checklist li { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dashed #eee; padding: 3px 0; }
+  .guide-checklist li:last-child { border-bottom: none; }
+  .guide-checklist .item-time { color: #999; font-size: 11px; white-space: nowrap; }
+
+  .guide-details-row { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; font-size: 12px; color: #666; padding-top: 10px; border-top: 1px solid #f0f0f0; margin-bottom: 6px; }
+  .guide-details-row .guide-tools { color: #666; font-weight: 600; }
+  .guide-details-row .sep { color: #ccc; }
+  .guide-demo-link { color: #1F4E79; text-decoration: none; font-weight: 600; }
+  .guide-demo-link:hover { text-decoration: underline; }
+  .guide-demo-hint { color: #999; font-size: 11.5px; }
+
+  .guide-toggle-combo { font-size: 11.5px; color: #1F4E79; background: none; border: none; cursor: pointer; padding: 2px 0; font-weight: 600; }
+  .guide-combo-box { display: none; background: #f7f7f5; border-radius: 6px; padding: 10px 12px; font-size: 12px; color: #444; margin-top: 6px; }
+  .guide-combo-box.open { display: block; }
+  .guide-combo-box p { margin-bottom: 6px; }
+  .guide-combo-box p:last-child { margin-bottom: 0; }
+  .guide-combo-box b { color: #222; }
+
+  .guide-phase-done { background: #f4f7fb; border: 1px solid #dbe6f3; border-radius: 8px; padding: 12px 14px; font-size: 12px; color: #333; margin-top: 12px; }
+  .guide-phase-done b { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; color: #1F4E79; margin-bottom: 4px; }
+  .guide-phase-done p { margin-bottom: 6px; }
+  .guide-selfcheck-line { font-size: 12px; }
+  .guide-selfcheck-line a { color: #1F4E79; font-weight: 600; text-decoration: none; }
+  .guide-selfcheck-line a:hover { text-decoration: underline; }
+  .muted { color: #999; }
+
+  .milestone-box { background: #eef4fb; border: 1.5px dashed #9db7d6; border-radius: 12px; padding: 16px 18px; margin-top: 8px; }
+  .milestone-box .card-label { margin-bottom: 6px; }
+  .milestone-box p { font-size: 13px; color: #333; }
+
+  /* TOOL TABLE */
+  table.tool-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table.tool-table th { text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; color: #888; padding: 6px 10px; border-bottom: 2px solid #ddd; }
+  table.tool-table td { padding: 9px 10px; border-bottom: 1px solid #eee; }
+  table.tool-table tbody tr:nth-child(even) { background: #fafafa; }
+  table.tool-table a { color: #1F4E79; text-decoration: none; font-weight: 400; }
+  table.tool-table a:hover { text-decoration: underline; }
+  table.tool-table a::after { content: " ↗"; font-size: 10px; color: #9db7d6; }
+
+  /* BOT */
+  .bot-cats { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 14px; }
+  .bot-cat { font-size: 12px; padding: 7px 14px; border-radius: 20px; background: #1F4E79; border: 1px solid #1F4E79; color: #fff; cursor: pointer; font-weight: 600; }
+  .bot-cat.inactive { background: #eef4fb; border: 1px solid #d5e3f5; color: #1F4E79; }
+  .bot-chips { display: none; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .bot-chips.open { display: flex; }
+  .bot-chip { font-size: 12px; padding: 6px 14px; border-radius: 20px; background: #f5f5f3; border: 1px solid #ddd; color: #333; cursor: pointer; }
+  .bot-chip:hover { background: #eef4fb; border-color: #d5e3f5; color: #1F4E79; }
+  .bot-chat { background: #f8f8f6; border-radius: 10px; padding: 14px; min-height: 60px; max-height: 400px; overflow-y: auto; margin-bottom: 12px; }
+  .bot-msg { font-size: 12.5px; line-height: 1.6; padding: 9px 13px; border-radius: 10px; margin-bottom: 8px; max-width: 90%; }
+  .bot-msg-user { background: #1F4E79; color: #fff; margin-left: auto; }
+  .bot-msg-bot { background: #fff; border: 1px solid #ddd; color: #333; }
+  .bot-msg-bot ul { margin: 6px 0 0 18px; }
+  .bot-input-row { display: flex; gap: 8px; }
+  .bot-input-field { flex: 1; border: 1.5px solid #ddd; border-radius: 8px; padding: 9px 12px; font-size: 13px; font-family: inherit; }
+  .bot-input-field:focus { outline: none; border-color: #378ADD; }
+  .bot-send-btn { background: #1F4E79; color: #fff; font-size: 13px; font-weight: 700; padding: 9px 18px; border: none; border-radius: 8px; cursor: pointer; }
+  .bot-send-btn:hover { background: #163d61; }
+  .bot-disclaimer { font-size: 10.5px; color: #999; margin-top: 8px; }
+
+  footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font-size: 11.5px; color: #999; text-align: center; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="sitenav-bar">
+    <span class="sitenav-icon">🧭</span>
+    <span class="sitenav-label">Navigation</span>
+    <div class="sitenav-links">
+      <a href="index.html">Übersicht</a>
+      <a href="KIGIR_Framework.html">KIGIR-Framework</a>
+      <a href="KIGIR_Cockpit_Demo.html">KIGIR-Cockpit</a>
+      <a href="KIGIR_Update_Generator.html">KI-Update-Generator</a>
+      <a href="KIGIR_Implementation_Guide.html" class="active">Implementation Guide</a>
+    </div>
+  </div>
+
+  <div class="title-row">
+    <div>
+      <h1>KIGIR – Implementation Guide</h1>
+      <div class="subtitle">Das eigene IR-Setup in 5 Schritten aufbauen. Kein IR-Team nötig, keine Eigenentwicklung, Einstieg ab Gratis-Tools.</div>
+    </div>
+    <div class="meta-badge">Praxis-Guide<br>Stand: 28.07.2026</div>
+  </div>
+  <a class="jump-link" href="#ki-assistent">↓ Direkt zum KI-Assistenten</a>
+
+  <div class="flow-row">
+    <div class="flow-box">
+      <div class="flow-phase">Phase 1</div>
+      <div class="flow-title">Positionierung &amp; Datenraum</div>
+      <div class="flow-caption">Master-Narrativ + Datenraum entstehen</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-phase">Phase 2</div>
+      <div class="flow-title">Identifikation &amp; Qualifizierung</div>
+      <div class="flow-caption">Basis: klare Positionierung aus Phase 1</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-phase">Phase 3</div>
+      <div class="flow-title">Ansprache &amp; Mittelbeschaffung</div>
+      <div class="flow-caption">Basis: Shortlist aus Phase 2</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-phase">Phase 4</div>
+      <div class="flow-title">Pflege &amp; Kommunikation</div>
+      <div class="flow-caption">Basis: Investoren an Bord aus Phase 3</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">5 Schritte</div>
+
+    <div class="guide-step">
+      <div class="guide-step-head">
+        <span class="guide-phase-tag">Phase 1</span><span class="guide-step-title">1. Strategie klären, Master-Narrativ aufsetzen</span>
+        <span class="guide-time-badge">⏱ ca. 1.5–2 Tage</span>
+      </div>
+      <div class="guide-step-desc">Kernaussagen definieren, ein zentrales Dokument als Single Source of Truth (eine zentrale, verbindliche Quelle für alle Aussagen). Alle weiteren Materialien (One-Pager, Deck, Summary) daraus ableiten.</div>
+      <ul class="guide-checklist">
+        <li><span>Kernaussagen zu Produkt, Markt und Team in 3–5 Sätzen festhalten</span><span class="item-time">ca. 3 Std.</span></li>
+        <li><span>Master-Dokument in Notion als Single Source of Truth anlegen</span><span class="item-time">ca. 3–4 Std.</span></li>
+        <li><span>One-Pager, Pitch-Deck und Executive Summary daraus ableiten</span><span class="item-time">ca. 6–8 Std.</span></li>
+      </ul>
+      <div class="guide-details-row">
+        <span class="guide-tools">Notion (gratis)</span><span class="sep">·</span>
+        <a class="guide-demo-link" href="KIGIR_Framework.html#phase-1">Live-Beispiel ansehen ↗</a>
+        <span class="guide-demo-hint">zeigt Phase 1 im Framework-Tool</span>
+      </div>
+      <button class="guide-toggle-combo" onclick="toggleDetails('detail1')">Hintergrund &amp; Stolperfalle ▸</button>
+      <div class="guide-combo-box" id="detail1">
+        <p><b>Warum wichtig:</b> Wilk (Equitec): «Konsistente Zahlen hast du nie.» Ohne Single Source of Truth drohen widersprüchliche Zahlen in Deck, One-Pager und E-Mails.</p>
+        <p><b>Typischer Fehler:</b> Direkt mit dem Pitch-Deck starten, ohne die Strategie dahinter zu klären.</p>
+      </div>
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-step-head">
+        <span class="guide-phase-tag">Phase 1</span><span class="guide-step-title">2. Datenraum mit Zugriffsstufen einrichten</span>
+        <span class="guide-time-badge">⏱ ca. 4–5 Stunden</span>
+      </div>
+      <div class="guide-step-desc">Vier Stufen: öffentlich, nach Erstkontakt, nach NDA, bestehende Investoren. Investoren sehen nur, was ihrem Beziehungsstand entspricht.</div>
+      <ul class="guide-checklist">
+        <li><span>Vier Zugriffsstufen definieren (öffentlich / Kontakt / NDA / Aktionär)</span><span class="item-time">ca. 1–2 Std.</span></li>
+        <li><span>Docsend-Datenraum entsprechend einrichten</span><span class="item-time">ca. 2–3 Std.</span></li>
+        <li><span>Zugriffsanalyse aktivieren</span><span class="item-time">ca. 30 Min.</span></li>
+      </ul>
+      <div class="guide-details-row">
+        <span class="guide-tools">Docsend</span><span class="sep">·</span>
+        <a class="guide-demo-link" href="KIGIR_Cockpit_Demo.html#public">Live-Beispiel ansehen ↗</a>
+        <span class="guide-demo-hint">zeigt das Investor-Portal, Zugriffsstufe öffentlich</span>
+      </div>
+      <button class="guide-toggle-combo" onclick="toggleDetails('detail2')">Hintergrund &amp; Stolperfalle ▸</button>
+      <div class="guide-combo-box" id="detail2">
+        <p><b>Warum wichtig:</b> Vier Stufen ersetzen das «Alles oder nichts» durch einen kontrollierten, nachvollziehbaren Zugriff (vgl. Kapitel 6).</p>
+      </div>
+      <div class="guide-phase-done">
+        <b>Phase 1 abgeschlossen, wenn</b>
+        <p>Master-Dokument steht, alle Materialien daraus abgeleitet, Docsend mit Zugriffsstufen konfiguriert.</p>
+        <p class="guide-selfcheck-line">Selbst-Check: <a href="KIGIR_Cockpit_Demo.html#founder">Pitch-Readiness-Score ansehen ↗</a> <span class="muted">(Demo mit Beispieldaten, Regler zur eigenen Einschätzung nutzen)</span></p>
+      </div>
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-step-head">
+        <span class="guide-phase-tag">Phase 2</span><span class="guide-step-title">3. Idealprofil definieren, Shortlist erstellen</span>
+        <span class="guide-time-badge">⏱ ca. 1 Tag</span>
+      </div>
+      <div class="guide-step-desc">Wunsch-Investoren nach Branche, Geografie und Risikotoleranz identifizieren. Feste Kriterien fixieren, bevor die Ansprache beginnt.</div>
+      <ul class="guide-checklist">
+        <li><span>Idealprofil nach Branche, Geografie, Risikotoleranz festlegen</span><span class="item-time">ca. 3 Std.</span></li>
+        <li><span>CRM (HubSpot/Notion) für Pipeline-Überblick einrichten</span><span class="item-time">ca. 2–3 Std.</span></li>
+        <li><span>LinkedIn Sales Navigator für Recherche nutzen</span><span class="item-time">laufend</span></li>
+      </ul>
+      <div class="guide-details-row">
+        <span class="guide-tools">HubSpot/Notion CRM, LinkedIn Sales Nav.</span><span class="sep">·</span>
+        <a class="guide-demo-link" href="KIGIR_Framework.html#phase-2">Live-Beispiel ansehen ↗</a>
+        <span class="guide-demo-hint">zeigt Phase 2 im Framework-Tool</span>
+      </div>
+      <button class="guide-toggle-combo" onclick="toggleDetails('detail3')">Hintergrund &amp; Stolperfalle ▸</button>
+      <div class="guide-combo-box" id="detail3">
+        <p><b>Warum wichtig:</b> Probst (Startfeld): «Investoren finden wir nicht dort, wo wir es gerne hätten.»</p>
+        <p><b>Typischer Fehler:</b> Zu breit suchen statt ein klares Profil zu definieren.</p>
+      </div>
+      <div class="guide-phase-done">
+        <b>Phase 2 abgeschlossen, wenn</b>
+        <p>Idealprofil dokumentiert, Shortlist mit min. 10 Investoren, Scoring-Kriterien fixiert.</p>
+        <p class="guide-selfcheck-line">Selbst-Check: <a href="KIGIR_Cockpit_Demo.html#founder">Investor-Scoring ansehen ↗</a> <span class="muted">(Demo mit Beispieldaten, Regler zur eigenen Einschätzung nutzen)</span></p>
+      </div>
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-step-head">
+        <span class="guide-phase-tag">Phase 3</span><span class="guide-step-title">4. Kanalspezifische Ansprache starten</span>
+        <span class="guide-time-badge">⏱ ca. 1 Tag, danach laufend</span>
+      </div>
+      <div class="guide-step-desc">Pro Kanal (Direkt, Plattform, Mittler) eine eigene Vorlage. KI liefert personalisierte Entwürfe, der Mensch prüft und gibt frei.</div>
+      <ul class="guide-checklist">
+        <li><span>Vorlage pro Kanal (Direkt, Plattform, Mittler) vorbereiten</span><span class="item-time">ca. 3–4 Std.</span></li>
+        <li><span>Investoren-Fragemodul mit mind. 5 Standardantworten aufbauen</span><span class="item-time">ca. 3 Std.</span></li>
+        <li><span>KI-Entwürfe erstellen, vor Versand persönlich freigeben</span><span class="item-time">laufend</span></li>
+      </ul>
+      <div class="guide-details-row">
+        <span class="guide-tools">Calendly, KI-Entwürfe</span><span class="sep">·</span>
+        <a class="guide-demo-link" href="KIGIR_Framework.html#phase-3">Live-Beispiel ansehen ↗</a>
+        <span class="guide-demo-hint">zeigt Phase 3 im Framework-Tool</span>
+      </div>
+      <button class="guide-toggle-combo" onclick="toggleDetails('detail4')">Hintergrund &amp; Stolperfalle ▸</button>
+      <div class="guide-combo-box" id="detail4">
+        <p><b>Warum wichtig:</b> Waar: «Die Investitionsbereitschaft sinkt, je digitaler und kälter die Ansprache wirkt.»</p>
+        <p><b>Typischer Fehler:</b> Dieselbe Nachricht an alle Kanäle schicken.</p>
+      </div>
+      <div class="guide-phase-done">
+        <b>Phase 3 abgeschlossen, wenn</b>
+        <p>Pro Kanal eine Vorlage erstellt, Fragen-Modul mit 5 Antworten befüllt, CRM-Pipeline angelegt.</p>
+      </div>
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-step-head">
+        <span class="guide-phase-tag">Phase 4</span><span class="guide-step-title">5. Kommunikationskalender und Investor-Portal aufbauen</span>
+        <span class="guide-time-badge">⏱ ca. 1 Tag Setup</span>
+      </div>
+      <div class="guide-step-desc">Quartalsweise Updates, jährliche GV, Push/Pull individuell konfigurierbar. KI automatisiert Reporting, der Mensch redigiert und versendet.</div>
+      <ul class="guide-checklist">
+        <li><span>Kommunikationskalender (Updates, GV, Events) festlegen</span><span class="item-time">ca. 1–2 Std.</span></li>
+        <li><span>Investor-Portal mit Update-Archiv einrichten</span><span class="item-time">ca. 3–4 Std.</span></li>
+        <li><span>KI-Update-Generator für Quartalsberichte nutzen</span><span class="item-time">ca. 1–2 Std./Update</span></li>
+      </ul>
+      <div class="guide-details-row">
+        <span class="guide-tools">Notion (Portal), visible.vc/Mailchimp</span><span class="sep">·</span>
+        <a class="guide-demo-link" href="KIGIR_Update_Generator.html">Live-Beispiel ansehen ↗</a>
+        <span class="guide-demo-hint">öffnet den echten KI-Update-Generator</span>
+      </div>
+      <button class="guide-toggle-combo" onclick="toggleDetails('detail5')">Hintergrund &amp; Stolperfalle ▸</button>
+      <div class="guide-combo-box" id="detail5">
+        <p><b>Warum wichtig:</b> Reto Ottiger: «Fehlende Informationen, fehlende Kommunikation, fehlende Transparenz.»</p>
+        <p><b>Typischer Fehler:</b> Nur bei Geldbedarf kommunizieren statt regelmässig.</p>
+      </div>
+      <div class="guide-phase-done">
+        <b>Phase 4 abgeschlossen, wenn</b>
+        <p>Kommunikationskalender steht, erstes Quartals-Update versendet, Portal aufgeschaltet.</p>
+      </div>
+    </div>
+
+    <div class="milestone-box">
+      <div class="card-label">Meilenstein – nach dem ersten Zyklus</div>
+      <p>Erster Update-Zyklus durchlaufen, Feedback eingeholt. Ab hier läuft die Pflege (Phase 4) im Rhythmus weiter, ohne dass die Grundstruktur erneut aufgebaut werden muss.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Tools im Überblick</div>
+    <table class="tool-table">
+      <thead><tr><th>Zweck</th><th>Empfehlung</th><th>Alternative 1</th><th>Alternative 2</th></tr></thead>
+      <tbody>
+        <tr><td>Master-Dokument</td><td><a href="https://www.notion.so" target="_blank" rel="noopener">Notion</a> (gratis)</td><td><a href="https://coda.io" target="_blank" rel="noopener">Coda</a></td><td><a href="https://docs.google.com" target="_blank" rel="noopener">Google Docs</a></td></tr>
+        <tr><td>Datenraum</td><td><a href="https://www.docsend.com" target="_blank" rel="noopener">Docsend</a></td><td><a href="https://www.pandadoc.com/rooms" target="_blank" rel="noopener">PandaDoc</a></td><td><a href="https://drive.google.com" target="_blank" rel="noopener">Google Drive</a> + Rechte</td></tr>
+        <tr><td>CRM</td><td><a href="https://www.hubspot.com/products/crm" target="_blank" rel="noopener">HubSpot</a> (gratis)</td><td>Notion-Tabelle</td><td><a href="https://www.pipedrive.com" target="_blank" rel="noopener">Pipedrive</a></td></tr>
+        <tr><td>Reporting</td><td><a href="https://visible.vc" target="_blank" rel="noopener">visible.vc</a></td><td><a href="https://mailchimp.com" target="_blank" rel="noopener">Mailchimp</a></td><td>Notion + manuell</td></tr>
+        <tr><td>Events/GV</td><td><a href="https://lu.ma" target="_blank" rel="noopener">Luma</a></td><td><a href="https://www.eventbrite.com" target="_blank" rel="noopener">Eventbrite</a></td><td><a href="https://forms.google.com" target="_blank" rel="noopener">Google Forms</a></td></tr>
+        <tr><td>Terminvereinbarung</td><td><a href="https://calendly.com" target="_blank" rel="noopener">Calendly</a></td><td><a href="https://cal.com" target="_blank" rel="noopener">Cal.com</a></td><td><a href="https://www.microsoft.com/microsoft-365/business/scheduling-and-booking-app" target="_blank" rel="noopener">Microsoft Bookings</a></td></tr>
+        <tr><td>Recherche</td><td><a href="https://business.linkedin.com/sales-solutions/sales-navigator" target="_blank" rel="noopener">LinkedIn Sales Nav.</a></td><td><a href="https://www.apollo.io" target="_blank" rel="noopener">Apollo</a></td><td>manuell</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" id="ki-assistent">
+    <div class="card-label">KI-Assistent</div>
+    <div style="font-size:18px;font-weight:700;color:#111;margin-bottom:6px;">Fragen zur Umsetzung? Frag den KIGIR-Bot</div>
+    <div style="font-size:12.5px;color:#555;margin-bottom:6px;">Wähle ein Thema und/oder gib eine Frage ein.</div>
+    <div class="bot-cats" id="bot-cats"></div>
+    <div class="bot-chips" id="bot-chips"></div>
+    <div class="bot-chat" id="bot-chat"></div>
+    <div class="bot-input-row">
+      <input class="bot-input-field" id="bot-input" type="text" placeholder="Eigene Frage eingeben..." onkeydown="if(event.key==='Enter'){askBotFromInput();}">
+      <button class="bot-send-btn" onclick="askBotFromInput()">Senden</button>
+    </div>
+    <div class="bot-disclaimer">Der KI-Assistent ist eine Demo-Version. Das Tool macht Vorschläge und gibt Orientierung. Die Antworten stützen sich auf die Thesis.</div>
+  </div>
+
+  <footer>
+    KIGIR – KI-gestützte Investor Relations · Christoph Ottiger · Transferthesis CAS HSG DIBT 11
+  </footer>
+
+</div>
+
+<script>
+function toggleDetails(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+// --- Bot-Wissensbasis: 21 Fragen, abgeglichen mit "KIGIR - 21 Fragen & Antworten" ---
+const botCategories = ["Einstieg & Grundlagen", "Phase 1", "Phase 2", "Phase 3", "Phase 4", "KI & Tools", "Strategie & Entscheidungen"];
+
+const botQA = [
+  { cat: "Einstieg & Grundlagen", q: "Was ist Investor Relations überhaupt und warum brauche ich das als Startup?",
+    match: /was ist (ir|investor relations)|warum.*brauche/i,
+    a: "Investor Relations (IR) ist die zielgerichtete Kommunikation mit der Finanz-Community. Im Fokus steht die Kommunikation mit deinen Investoren. Bei börsenkotierten Firmen ist das gesetzlich geregelt. Bei Startups fehlt diese Pflicht weitgehend resp. andere Regeln kommen zur Anwendung. Ein Problem bleibt aber: Deine Investoren wissen weniger über dein Unternehmen als du. Wer nicht proaktiv informiert, verliert Vertrauen. IR heisst: regelmässig, konsistent und transparent kommunizieren." },
+  { cat: "Einstieg & Grundlagen", q: "Wir sind ein Team von drei Personen. Ist das nicht zu früh für IR?",
+    match: /zu früh|drei personen|kleines team/i,
+    a: "Nein, im Gegenteil. Gerade weil ihr klein seid, habt ihr keine dedizierten IR-Ressourcen. Genau deshalb entstehen die Probleme: inkonsistente Unterlagen, reaktive Kommunikation, verstreute Kennzahlen. Das Framework ist bewusst für kleinere Teams gebaut, die bis zu zwei Dutzend Investoren individuell betreuen. Je früher ihr anfängt, desto weniger müsst ihr später nachholen." },
+  { cat: "Einstieg & Grundlagen", q: "Bisher hat es auch ohne Framework funktioniert. Warum jetzt umstellen?",
+    match: /bisher.*(funktioniert|geklappt|gegangen|geld)|(warum|wieso|weshalb).*(umstellen|ändern|wechseln)|hat (doch|bisher).*(funktioniert|geklappt)|ohne (framework|struktur|das alles)|informell.*(funktioniert|geklappt|geld)/i,
+    a: "Weil es bisher funktioniert hat, heisst nicht, dass es gut skaliert. Solange du 2–3 Investoren informell betreust, geht das. Sobald es 8, 12 oder mehr werden, wird's anspruchsvoll: Wer hat welche Info bekommen? Welche Zahlen stehen im Deck vs. in der letzten Mail? Wer wartet seit Wochen auf ein Update? Die empirische Erkenntnis: Vertrauensverlust entsteht nicht durch böse Absicht, sondern durch fehlende Struktur. Das Framework nachzuziehen ist aufwendiger als es von Anfang an richtig aufzusetzen. Und: Ein konsistenter Datenraum und ein klares Narrativ helfen dir nicht nur bei neuen Investoren, sondern stärken auch das Vertrauen der bestehenden." },
+  { cat: "Einstieg & Grundlagen", q: "Muss ich alle vier Phasen durchlaufen oder kann ich einzelne überspringen?",
+    match: /alle (vier )?phasen|überspringen|phase.*einsteigen/i,
+    a: "Die Phasen bauen aufeinander auf. Ohne geklärte Strategie und ein Master-Narrativ (Phase 1) bleibt jede Investorensuche unscharf. Ohne Idealprofil (Phase 2) verpufft die Ansprache. Aber: Wenn du bereits Investoren hast und nur die laufende Kommunikation verbessern willst, kannst du direkt bei Phase 4 einsteigen und Phase 1 parallel nachholen. Ein Zurückspringen ist jederzeit möglich." },
+  { cat: "Einstieg & Grundlagen", q: "Was kostet mich das Ganze?",
+    match: /was kostet|kosten insgesamt|budget/i,
+    a: "Der Einstieg ist gratis oder sehr günstig. Notion Free für das Master-Dokument, HubSpot Free für das CRM, Google Drive für die Versionierung. Einzig LinkedIn Sales Navigator (ca. CHF 100/Monat) ist eine optionale Investition für Phase 2. Docsend hat eine Testversion; visible.vc für Reporting kommt erst in Phase 4 dazu, wenn du es brauchst. Kernprinzip: Der Aufwand wächst mit dem Unternehmen." },
+  { cat: "Phase 1", q: "Was genau ist ein «Master-Narrativ» und wie baue ich es auf?",
+    match: /master-narrativ|master narrativ|single source/i,
+    a: "Ein einziges Dokument (z.B. in Notion), das alle Kernaussagen deines Startups enthält: Strategie, Zahlen, Team, Produkt, Markt. Alles andere (One-Pager, Pitch-Deck, Executive Summary, E-Mail-Texte) wird daraus abgeleitet. Vorteil: Wenn sich eine Zahl ändert, änderst du sie an einer Stelle statt in zehn Dokumenten. Starte mit 3–5 Sätzen zu: Problem, Lösung, Markt, Team, Finanzierungsbedarf. Und dann schrittweise erweitern." },
+  { cat: "Phase 1", q: "Wie funktionieren die vier Zugriffsstufen im Datenraum?",
+    match: /zugriffsstufen|vier stufen|docsend.*einrichten/i,
+    a: "<ul><li><b>Stufe 1 (öffentlich):</b> Headline, Problem/Lösung, erste Traktion. Kein Login nötig.</li><li><b>Stufe 2 (nach Erstkontakt):</b> One-Pager, Team, Umsatz-Roadmap, Investment-Zusammenfassung.</li><li><b>Stufe 3 (nach NDA):</b> Vollständige KPIs, Cap Table, Finanzplan, Dokumenten-Tresor.</li><li><b>Stufe 4 (bestehende Investoren):</b> Portfolioübersicht, GV-Unterlagen, Direktkontakt.</li></ul>Die Liste mit Informationen ist nicht abschliessend. In Docsend erstellst du pro Stufe einen eigenen Link mit entsprechenden Zugriffsrechten. Vier Links, vier Stufen." },
+  { cat: "Phase 1", q: "Brauche ich einen One-Pager?",
+    match: /one-pager|onepager/i,
+    a: "Für die Kaltakquise: ja. Er ist der niedrigschwellige Einstieg (Stufe 1 des Datenraums). Bei warmen Kontakten (Warm Introduction): nein, da kannst du direkt ins Pitch-Deck oder den Datenraum wechseln. Wichtig: Der One-Pager wird aus dem Master-Narrativ abgeleitet und nicht separat verfasst. So bleibt er konsistent." },
+  { cat: "Phase 2", q: "Wie finde ich die richtigen Investoren?",
+    match: /wie finde ich|richtige investoren/i,
+    a: "Nicht primär über die Ticketgrösse, sondern über Branche, Geografie und Risikotoleranz. Definiere zuerst ein Idealprofil: Welche Investoren passen zu deinem Geschäftsmodell? Dann suche gezielt über LinkedIn, dein Netzwerk und allenfalls Plattformen wie Verve Ventures. Fixiere Shortlist-Kriterien, bevor du jemanden ansprichst. Wer nicht systematisch sucht, verschwendet Zeit auf beiden Seiten." },
+  { cat: "Phase 2", q: "In der Ostschweiz gibt es kaum Investoren. Was tun?",
+    match: /ostschweiz|kaum investoren|region/i,
+    a: "Das ist ein bekanntes Problem. Drei Ansätze: Erstens Mittler einsetzen (Makler, Berater, Netzwerkpartner) – der Einsatz von Mittlern ist vielfach Standard und wird empfohlen. Zweitens überregional suchen (Zürich, Genf). Drittens Branchenevents und Alumni-Netzwerke nutzen. Grössere Investoren sind in öffentlichen Kanälen kaum anzutreffen; die Ansprache erfolgt fast nur über persönliche Netzwerke." },
+  { cat: "Phase 2", q: "Soll ich Clay oder Apollo für die Recherche nutzen?",
+    match: /clay|apollo/i,
+    a: "Das hängt stark vom Individualfall ab. Es ist eine fortgeschrittene Option mit hoher Lernkurve und Kosten, die für sehr frühe Startups schwer zu rechtfertigen sind. Starte mit: LinkedIn Sales Navigator und ein einfaches CRM (HubSpot oder Notion). Das reicht gut für zwei Dutzend Investoren. Clay wird erst interessant, wenn du eine grössere Longlist systematisch anreichern willst." },
+  { cat: "Phase 3", q: "Darf ich KI für die Erstansprache nutzen?",
+    match: /ki.*erstansprache|darf ich ki/i,
+    a: "Ja, aber mit klaren Regeln. KI darf Entwürfe vorbereiten (personalisierte Mails). Aber: Jede Nachricht wird vor dem Versand von einer Person geprüft, individualisiert und freigegeben. Kein vollautomatisierter Versand. Der KI-Einsatz wird auch nicht verschleiert. Je kälter und digitaler die Ansprache wirkt, desto geringer die Investitionsbereitschaft. KI bereitet vor, der Mensch prüft und versendet." },
+  { cat: "Phase 3", q: "Wie spreche ich Investoren über verschiedene Kanäle an?",
+    match: /kanäle|kanal|intermediär/i,
+    a: "Drei Kanaltypen, jeder mit eigener Vorlage: Direktkanäle (Warm Introduction, Events, Pitchabende, Alumni – persönlichste Variante, höchste Erfolgsquote), Plattformkanäle (Verve Ventures, Wemakeit, Startup-Verbände – ergänzend, nicht primär), Intermediäre (Family-Office-Scouts, Anwaltskanzleien, Treuhänder – Standard bei grösseren Tickets). Keine Einheits-Nachricht für alle Kanäle." },
+  { cat: "Phase 3", q: "Was ist das Investoren-Fragen-Modul?",
+    match: /fragen-modul|fragemodul/i,
+    a: "Eine Sammlung von Textbausteinen zu häufigen Investorenfragen: Cap Table, Bewertungslogik, geistiges Eigentum, Aktien vs. Wandeldarlehen, Exit-Strategie. Zweck: Wenn du drei Investorengespräche in einer Woche führst, gibst du überall dieselben abgestimmten Antworten statt jedes Mal zu improvisieren. Das verlängert das Konsistenzprinzip aus Phase 1 in die Gesprächssituation." },
+  { cat: "Phase 4", q: "Wie oft soll ich meine Investoren informieren?",
+    match: /wie oft|frequenz/i,
+    a: "Quartalsweise ein Update plus eine jährliche physische Generalversammlung. Das ist der Standard-Rhythmus. Dabei gilt: Relevanz schlägt Frequenz. Ein «Zuspammen» ohne Neuigkeitswert ist kontraproduktiv. Wenn es nichts Neues gibt, dann lassen. Bei wichtigen Meilensteinen darf es auch dazwischen eine kurze Nachricht sein." },
+  { cat: "Phase 4", q: "Was gehört in ein Quartals-Update?",
+    match: /quartals-update|was gehört/i,
+    a: "<ul><li>Headline-KPI (z.B. MRR, Wachstum)</li><li>Operative Highlights (2–3 Meilensteine)</li><li>Herausforderungen &amp; Learnings, ehrlich, nicht beschönigen</li><li>Team-Updates (neue Leute, offene Stellen)</li><li>Ausblick &amp; Ask</li></ul>Maximal eine Seite. KI kann dir einen Entwurf aus deinen KPIs generieren. Du redigierst und gibst frei." },
+  { cat: "Phase 4", q: "Push oder Pull: Soll ich Updates aktiv versenden oder ein Portal bereitstellen?",
+    match: /push.*pull|pull.*push/i,
+    a: "Beides. Investoren haben unterschiedliche Präferenzen. Die einen wollen einen Newsletter (Push), die anderen schauen selbst im Portal nach (Pull). Im Framework ist deshalb eine individuelle Konfiguration pro Investor vorgesehen: Jede Person wählt selbst, ob und wann sie benachrichtigt wird. Das löst den Zielkonflikt konstruktiv, statt eine Entweder-oder-Entscheidung zu erzwingen." },
+  { cat: "KI & Tools", q: "Wo bringt KI den grössten Nutzen?",
+    match: /grössten nutzen|wo.*ki.*nutzen/i,
+    a: "In Phase 4 (Pflege & Kommunikation): Reporting-Automatisierung und Content-Aufbereitung. Das ist der Befund mit dem breitesten Konsens aus allen Interviews. KI erstellt Quartals-Updates auf Knopfdruck, prüft die Konsistenz zwischen Dokumenten und bereitet GV-Unterlagen vor. Zweitgrösster Nutzen: Phase 1 (Konsistenzprüfung) und Phase 2 (Matching/Scoring). Am sensibelsten: Phase 3 (Erstansprache), dort nur mit menschlicher Freigabe." },
+  { cat: "KI & Tools", q: "Wann soll ich KI NICHT einsetzen?",
+    match: /wann.*ki.*nicht|ki nicht einsetzen/i,
+    a: "Drei klare Grenzen: Ohne Strategie – KI kann eine fehlende Unternehmensstrategie nicht ersetzen, erst Strategie klären, dann KI einsetzen, sonst «Shit in, shit out». Für persönliche Gespräche – Erstvertrauen entsteht im persönlichen Dialog, nicht in einer automatisierten Nachricht. Ohne Redigierung – Texte, die erkennbar nach KI klingen, untergraben das Vertrauen; jeder KI-generierte Text wird vor Versand redaktionell überarbeitet, dann freigegeben." },
+  { cat: "Strategie & Entscheidungen", q: "Warum ein Baukasten und nicht eine integrierte Plattform?",
+    match: /baukasten|integrierte plattform|clickmind/i,
+    a: "Drei Gründe: Flexibilität (Tools einzeln austauschbar, kein Vendor-Lock-in), Skalierbarkeit (Einstieg über Gratis-Tools, Aufwand wächst mit dem Unternehmen) und Individualität (verschiedene Branchen brauchen verschiedene Kombinationen). Eine integrierte Plattform wie zum Beispiel clickmind.ai von Greenstate macht Sinn bei sehr vielen Kleininvestoren. Bei zwei Dutzend individuell betreuten Investoren lohnt sich der Aufwand einer Eigenentwicklung nicht." },
+  { cat: "Strategie & Entscheidungen", q: "Wie lange dauert es, bis das Framework steht?",
+    match: /wie lange|dauert.*framework|zeitplan/i,
+    a: "Ein realistischer Zeitplan, als grobe Schätzung, die im Einzelfall geprüft werden muss: Woche 1 Phase 1 (ca. 2 Tage), Woche 2–3 Phase 2 (ca. 1 Tag), ab Woche 3 Phase 3 (ca. 1 Tag Einrichtung, danach laufend), ab Woche 6–8 Phase 4 (ca. 1 Tag Setup). Insgesamt: In 4–5 Arbeitstagen steht die Grundstruktur. Die laufende Pflege danach ist deutlich schlanker als ohne Framework." },
+];
+
+let activeCat = null;
+
+function renderCats() {
+  const wrap = document.getElementById('bot-cats');
+  wrap.innerHTML = '';
+  botCategories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'bot-cat' + (activeCat === cat ? '' : ' inactive');
+    btn.textContent = cat;
+    btn.onclick = () => { activeCat = cat; renderCats(); renderChips(); };
+    wrap.appendChild(btn);
+  });
+}
+function renderChips() {
+  const wrap = document.getElementById('bot-chips');
+  wrap.innerHTML = '';
+  if (!activeCat) { wrap.classList.remove('open'); return; }
+  wrap.classList.add('open');
+  botQA.filter(item => item.cat === activeCat).forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'bot-chip';
+    btn.textContent = item.q;
+    btn.onclick = () => askBot(item.q);
+    wrap.appendChild(btn);
+  });
+}
+function askBot(question) {
+  addBotMessage(question, 'user');
+  const found = botQA.find(item => item.match.test(question));
+  const answer = found ? found.a : "Demo: In der Live-Version würde hier eine KI-generierte Antwort erscheinen, gestützt auf die Kapitel 1–7 dieser Arbeit.";
+  setTimeout(() => addBotMessage(answer, 'bot'), 350);
+}
+function askBotFromInput() {
+  const input = document.getElementById('bot-input');
+  const q = input.value.trim();
+  if (!q) return;
+  askBot(q);
+  input.value = '';
+}
+function addBotMessage(html, who) {
+  const chat = document.getElementById('bot-chat');
+  const div = document.createElement('div');
+  div.className = 'bot-msg ' + (who === 'user' ? 'bot-msg-user' : 'bot-msg-bot');
+  div.innerHTML = html;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+renderCats();
+</script>
+</body>
+</html>
